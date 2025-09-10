@@ -1,0 +1,106 @@
+[
+  {
+    "title": "Java",
+    "imageSrc": "https://img.icons8.com/fluency/48/java-coffee-cup-logo.png"
+  },
+  {
+    "title": "Spring Boot",
+    "imageSrc": "https://img.icons8.com/officel/80/spring-logo.png"
+  },
+  {
+    "title": "PostgreSQL",
+    "imageSrc": "https://img.icons8.com/plasticine/100/postgreesql.png"
+  },
+  {
+    "title": "MongoDB",
+    "imageSrc": "https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/24/external-mongodb-a-cross-platform-document-oriented-database-program-logo-shadow-tal-revivo.png"
+  },
+  {
+    "title": "Oracle SQL",
+    "imageSrc": "https://img.icons8.com/nolan/64/oracle-logo.png"
+  },
+  {
+    "title": "Redis",
+    "imageSrc": "https://img.icons8.com/color/48/redis--v2.png"
+  },
+  {
+    "title": "Apache Kafka",
+    "imageSrc": "https://img.icons8.com/nolan/64/apache-kafka.png"
+  },
+  {
+    "title": "AWS",
+    "imageSrc": "https://img.icons8.com/nolan/64/amazon-web-services.png"
+  },
+  {
+    "title": "Docker",
+    "imageSrc": "https://img.icons8.com/color/48/docker.png"
+  },
+  {
+    "title": "JUnit",
+    "imageSrc": "/assets/skills/UnitTesting.png"
+  },
+  {
+    "title": "System Design",
+    "imageSrc": "/assets/skills/systemdesign.png"
+  },
+  {
+    "title": "Git",
+    "imageSrc": "https://img.icons8.com/nolan/64/git.png"
+  },
+  {
+    "title": "GitLab",
+    "imageSrc": "https://img.icons8.com/3d-fluency/94/github-logo.png"
+  },
+  {
+    "title": "Jenkins",
+    "imageSrc": "https://img.icons8.com/color/48/jenkins.png"
+  },
+  {
+    "title": "Multithreading",
+    "imageSrc": "/assets/skills/multithreading.png"
+  },
+  {
+    "title": "OS",
+    "imageSrc": "https://img.icons8.com/fluency/48/operating-system.png"
+  },
+  {
+    "title": "OOP",
+    "imageSrc": "/assets/skills/OOPS.png"
+  },
+  {
+    "title": "DSA",
+    "imageSrc": "https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/external-algorithms-data-analytics-flaticons-lineal-color-flat-icons.png"
+  },
+  {
+    "title": "HTML",
+    "imageSrc": "https://img.icons8.com/color/48/html-5--v1.png"
+  },
+  {
+    "title": "CSS",
+    "imageSrc": "https://img.icons8.com/color/48/css3.png"
+  },
+  {
+    "title": "JavaScript",
+    "imageSrc": "https://img.icons8.com/ios-filled/50/javascript-logo.png"
+  },
+  {
+    "title": "React",
+    "imageSrc": "https://img.icons8.com/color/48/react-native.png"
+  },
+  {
+    "title": "Postman",
+    "imageSrc": "/assets/skills/Postman.png"
+  },
+  {
+    "title": "Debbugging",
+    "imageSrc": "https://img.icons8.com/external-vectorslab-flat-vectorslab/53/external-Debugging-security-vectorslab-flat-vectorslab.png"
+  },
+  {
+    "title": "IntelliJ",
+    "imageSrc": "https://img.icons8.com/color/48/intellij-idea.png"
+  },
+  {
+    "title": "Eclipse",
+    "imageSrc": "https://img.icons8.com/nolan/64/java-eclipse.png"
+  }
+]

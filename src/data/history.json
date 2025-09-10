@@ -1,0 +1,34 @@
+[
+  {
+    "role": "Software Engineer",
+    "organisation": "Salescode.AI",
+    "startDate": "Jan, 2023",
+    "endDate": "Mar 2025",
+    "experiences": [
+      "Played a pivotal role in modernizing a monolithic codebase by migrating to microservices, improving scalability and performance for agent management, RBAC, telephony workflows, and marketing campaigns.",
+      "Developed APIs for agent availability (color-coded for lead conversion), role-based access control, and Agency360 (agents, telephony profiles, groups), increasing system efficiency by 30% and resolving numerous user stories and defects.",
+      "Implemented a scheduler to synchronize call logs from Twilio with recordings in Amazon S3, addressing data inconsistencies and ensuring accuracy.",
+      "Optimized performance with multithreading, data migration, and efficient SQL query optimization.",
+      "Contributed to technical documentation, schema design, and code reviews to ensure high-quality deliverables and maintainable code."
+    ],
+    "imageSrc": "history/salescode.png",
+    "techUsed": [
+      "Java", "Spring Boot", "Redis", "Oracle SQL", "AWS", "Docker", "JUnit", "JPA", "Hibernate", "Gradle", "Maven", "Jenkins"
+    ]
+  },
+  {
+    "role": "Senior Software Engineer",
+    "organisation": "Salescode.AI",
+    "startDate": "Apr, 2025",
+    "endDate": "Present",
+    "experiences": [
+      "Collaborated in an Agile team to enhance the Communication-Service messaging system, achieving a 35% improvement in reliability, scalability, and performance.",
+      "Developed and optimized RESTful Java APIs with Spring Boot, improving throughput, response times, and reducing latency.",
+      "Performed unit testing and debugging, reducing error rates by 30% and ensuring high-quality deliverables through cross-team collaboration."
+    ],
+    "imageSrc": "history/salescode.png",
+    "techUsed": [
+      "Java", "Spring Boot", "mongodb", "Docker", "Kafka", "Elastic Search", "Git", "System Design", "JUnit", "PostgreSQL", "Jira", "GitLab"
+    ]
+  }
+]

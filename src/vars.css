@@ -1,0 +1,97 @@
+/* Default Theme (Light Mode) */
+:root {
+  /* Colors for light mode */
+  --color-text: #000;
+  --color-primary: #007BFF;
+  --bg-color-light-gray: rgba(25, 55, 109, 0.7);
+  --color-secondary: #eee;
+  --color-dark: #0b2447;
+  --color-bg: #ffffff;
+  /* Provide light-mode secondary text color and navbar active color */
+  --color-text-secondary: #333;
+  --navbar-active-color: var(--color-primary);
+  /* White background for light mode */
+  --gradient-bg: linear-gradient(90deg, rgba(7, 21, 45, 1) 70%, rgba(7, 21, 45, 0) 120%);
+
+
+  /* Font */
+  --font-roboto: "Roboto";
+
+  /*Navbar*/
+  --navbar-bg: #ddd;
+  /* --navbar-text: var(--color-text-primary);
+  --navbar-link: var(--color-text-secondary);
+  --navbar-link-hover: var(--color-text);
+  --navbar-link-active: var(--color-primary);
+  --navbar-link-active-bg: var(--color-text);
+  --navbar-link-border-radius: 4px;
+  --navbar-link-padding: 12px 16px;
+  --navbar-link-margin-right: 16px; */
+
+  /* Hero */
+  --social-media-icon-filter: invert(100%) saturate(100%) brightness(0%) contrast(100%);
+  --social-media-icon-hover-filter: invert(61%) sepia(90%) saturate(2763%) hue-rotate(157deg) brightness(100%) contrast(100%);
+
+
+  --max-screen-width: 1500px;
+  /* Define padding for different breakpoints */
+  --padding-sm: 16px;
+  /* For small screens */
+  --padding-md: 24px;
+  /* For medium screens (≥768px) */
+  --padding-lg: 48px;
+  /* For large screens (≥992px) */
+  --padding-xl: 96px;
+  /* For extra-large screens (≥1200px) */
+
+  --space-bw-sections: 110px;
+  --space-bw-sections-md: 70px;
+  --space-bw-sections-sm: 50px;
+}
+
+/* Dark Mode */
+[data-theme='dark'] {
+  /* Colors for dark mode */
+  --color-text: #fff;
+  --color-text-primary: #e2e5eb;
+  --color-text-secondary: #d0d7e6;
+  --color-primary: #a0c4e7;
+  --color-secondary: #19376d;
+  --color-dark: #0b2447;
+  --color-bg: #212529;
+  /* Dark background for dark mode */
+  --color-bg-secondary: #3bb78f;
+  --gradient-bg: linear-gradient(90deg, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0) 120%);
+  --box-shadow: 0px 4px 8px rgb(25,54,106);
+
+  /*Navbar*/
+  --navbar-bg: #212529;
+  --navbar-active-color: rgb(28,176,255);
+
+
+  /* Hero */
+  --social-media-icon-filter: invert(100%) saturate(100%) brightness(85%) contrast(100%);
+  --social-media-icon-hover-filter: invert(47%) sepia(87%) saturate(2167%) hue-rotate(157deg) brightness(100%) contrast(100%);
+
+
+
+  /* About */
+  --about-image-filter: invert(61%) sepia(90%) saturate(2763%) hue-rotate(171deg) brightness(100%) contrast(100%) drop-shadow(2px 4px 6px black);
+
+
+
+
+  --max-screen-width: 1500px;
+  /* Define padding for different breakpoints */
+  --padding-sm: 16px;
+  /* For small screens */
+  --padding-md: 24px;
+  /* For medium screens (≥768px) */
+  --padding-lg: 48px;
+  /* For large screens (≥992px) */
+  --padding-xl: 96px;
+  /* For extra-large screens (≥1200px) */
+  --space-bw-sections: 110px;
+  --space-bw-sections-md: 70px;
+  --space-bw-sections-sm: 50px;
+}

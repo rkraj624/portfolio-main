@@ -1,0 +1,158 @@
+@import "../../vars.css";
+
+.container {
+  color: var(--color-text);
+}
+
+.title {
+  color: var(--color-text);
+  font-size: 35px;
+  font-weight: 700px;
+  letter-spacing: 1.75px;
+  text-transform: uppercase;
+}
+
+.content {
+  margin-top: 14px;
+}
+
+.history {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.historyItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 46%;
+  gap: 4%;
+  background: #19376d;
+  background: linear-gradient(90deg, #19376d 0%, rgba(25, 55, 109, 0) 100%);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.historyItemLeft {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.companyInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.companyIcon {
+  width: 50px;
+  margin-right: 10px;
+}
+
+.companyName,
+.position {
+  font-size: 20px;
+  font-weight: 300;
+  /* margin: 0; */
+  color: var(--color-text-primary);
+}
+.position{
+  font-size: 17px;
+  font-weight: 200;
+  /* margin: 0; */
+  color: var(--color-text-primary);
+}
+
+.historyItemRight {
+  font-family: var(--font-roboto);
+}
+
+.date {
+  font-size: 18px;
+  font-weight: 250;
+  margin-bottom: 6px;
+  color: var(--color-text-primary);
+}
+
+.historyItemRight ul {
+  margin-top: 6px;
+  list-style-position: inside;
+  list-style-type: disc;
+  margin-left: 17px;
+}
+
+/* p img{
+  width: 20px;
+  filter: invert(100%) saturate(0%) brightness(100%) contrast(100%);
+} */
+
+.historyItemRight ul li{
+  margin-bottom: 8px;    /* Adjust bottom margin for spacing between items */
+  width: 100%;
+  text-align:justify;
+  color: var(--color-text-secondary);
+}
+
+.techContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.techUsed {
+  display: flex;
+  align-items: center;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.techUsed:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.techIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  object-fit: contain;
+  filter: invert(100%) saturate(0%) brightness(0%) contrast(100%);
+
+}
+
+@media screen and (max-width: 768px) {
+  .historyItem {
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .historyItemLeft {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items:start;
+    gap: 10px;
+  }
+
+  .companyIcon {
+    width: 30px;
+    margin-left: -8px;
+  }
+}

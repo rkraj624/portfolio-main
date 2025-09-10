@@ -1,0 +1,33 @@
+/* ThemeToggleButton.module.css */
+
+/* Common styles for the theme toggle button */
+.themeToggleBtn {
+  position: fixed;
+  bottom: 95px;
+  right: 15px;
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+/* Hover effect for the button */
+.themeToggleBtn:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Light mode button styles */
+.light {
+  color: #f39c12; /* Sun color */
+}
+
+/* Dark mode button styles */
+.dark {
+  color: #34495e; /* Moon color */
+}

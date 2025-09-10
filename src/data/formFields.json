@@ -1,0 +1,42 @@
+[
+  {
+    "type": "text",
+    "name": "first_name",
+    "label": "First Name",
+    "required": true,
+    "className": "input",
+    "wrapperClassName": "input-container"
+  },
+  {
+    "type": "text",
+    "name": "last_name",
+    "label": "Last Name",
+    "required": false,
+    "className": "input",
+    "wrapperClassName": "input-container"
+  },
+  {
+    "type": "email",
+    "name": "user_email",
+    "label": "Email",
+    "required": true,
+    "className": "input",
+    "wrapperClassName": "input-container"
+  },
+  {
+    "type": "tel",
+    "name": "user_phone",
+    "label": "Phone",
+    "required": false,
+    "className": "input",
+    "wrapperClassName": "input-container"
+  },
+  {
+    "type": "textarea",
+    "name": "message",
+    "label": "Message",
+    "required": true,
+    "className": "input",
+    "wrapperClassName": "input-container textarea"
+  }
+]

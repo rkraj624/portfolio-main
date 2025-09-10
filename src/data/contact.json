@@ -1,0 +1,17 @@
+[
+  {
+    "type": "Address",
+    "iconClass": "fa fa-location-arrow",
+    "values": ["Gurgaon"]
+  },
+  {
+    "type": "Email",
+    "iconClass": "fa fa-envelope",
+    "values": ["iamravikishanraj@gmail.com"]
+  },
+  {
+    "type": "Phone",
+    "iconClass": "fa fa-phone",
+    "values": ["+91 6302028752"]
+  }
+]

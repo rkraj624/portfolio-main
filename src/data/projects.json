@@ -1,0 +1,39 @@
+[
+  {
+    "title": "BookMyShow",
+    "imageSrc": "projects/bookmyshow.png",
+    "description": [
+      "Developed a RESTful application with APIs for User, Movie, Reviews, Show, Show Seats, Cinema, Cinema Hall, Search, and Booking management.",
+      "Implemented authentication and security using Spring Security, JWT, and BCrypt for enhanced protection.",
+      "Created two microservices: Review Service for movie reviews and Global Search Service using Elasticsearch for advanced search.",
+      "Integrated services using Kafka to connect the Review Service, Global Search Service, and BookMyShow seamlessly."
+    ],
+    "techUsed": [ "Spring Boot", "MongoDB", "Kafka", "Elasticsearch", "Git", "GitHub"],
+    "links": {
+      "source": "https://github.com/rkraj624/BookMyShow/tree/BMSJwtAuth"
+    }
+  },
+  {
+    "title": "Elektu",
+    "imageSrc": "projects/elektu.png",
+    "description": ["The user can access the bicycle through multiple options such as Bluetooth, QR Code, Fingerprint sensor and the mobile application (Android App).", "Consist Firebase Database, User verification using OTP."
+  ],
+    "techUsed": ["Android", "Firebase", "Razorpay" ],
+    "links": {
+      "source": "https://drive.google.com/file/d/1PzYJ-KQnTxxOyz2fsyKnilZLlZ4Ez1Vx/view"
+    }
+  },
+  {
+    "title": "Portfolio",
+    "imageSrc": "projects/portfolio.png",
+    "description": ["Developed a dynamic portfolio website using React for an interactive and responsive UI.",
+      "Styled the website with CSS, ensuring a visually appealing and user-friendly design.",
+      "Utilized JSON for structured data management, enabling seamless content updates."
+  ],
+    "techUsed": ["React", "CSS", "JSON", "Git", "GitHub"],
+    "links": {
+      "demo": "#",
+      "source": "https://github.com/rkraj624/portfolio"
+    }
+  }
+]

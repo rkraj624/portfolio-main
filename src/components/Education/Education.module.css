@@ -1,0 +1,81 @@
+.container {
+  color: var(--color-text);
+}
+
+.title {
+  color: var(--color-text);
+  font-size: 35px;
+  font-weight: 700px;
+  letter-spacing: 1.75px;
+  text-transform: uppercase;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.educationBlock {
+  width: 48%;
+  padding: 16px ;
+  background: linear-gradient(90deg, #19376d 0%, rgba(25, 55, 109, 0) 100%);
+  border-radius: 8px;
+  /* border: 1px solid #ddd; */
+  margin-bottom: 20px;
+}
+
+.content > .educationBlock:first-child {
+  width: 100%;
+}
+.educationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.educationDegree {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--color-text-primary); /* White color for the degree */
+  /* background-color: #333; */
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.educationDetails {
+  color: var(--color-text-secondary); /* Blue color for details */
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+.educationDuration {
+  font-size: 16px;
+  color: var(--color-text-primary);
+  font-weight: bold;
+}
+
+.educationInfo {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);;
+  padding-left: 9px;
+}
+
+@media screen and (max-width: 768px){
+  .educationBlock {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1200px){
+  .educationBlock {
+    width: 48%;
+  }
+
+  .content > .educationBlock:first-child {
+    width: 48%;
+  }
+}
