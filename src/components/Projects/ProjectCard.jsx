@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { getImageUrl } from "../../utils";
 import styles from "./ProjectCard.module.css";
 
 export const ProjectCard = ({ project }) => {
   const [showAll, setShowAll] = useState(false);
-  
+
 
   const toggleReadMore = () => setShowAll(!showAll);
 
@@ -19,7 +19,7 @@ export const ProjectCard = ({ project }) => {
       <div className={styles.description}>
         <ul>
           {project.description
-            .slice(0, showAll ? project.description.length : 2)
+            .slice(0, showAll ? project.description.length : 1)
             .map((point, id1) => (
               <li key={id1}>{point}</li>
             ))}

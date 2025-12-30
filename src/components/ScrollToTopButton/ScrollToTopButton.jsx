@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./ScrollToTopButton.module.css";
 
 export const ScrollToTopButton = () => {

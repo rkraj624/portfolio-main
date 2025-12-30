@@ -5,11 +5,11 @@
     "startDate": "Jan, 2023",
     "endDate": "Mar 2025",
     "experiences": [
-      "Played a pivotal role in modernizing a monolithic codebase by migrating to microservices, improving scalability and performance for agent management, RBAC, telephony workflows, and marketing campaigns.",
-      "Developed APIs for agent availability (color-coded for lead conversion), role-based access control, and Agency360 (agents, telephony profiles, groups), increasing system efficiency by 30% and resolving numerous user stories and defects.",
-      "Implemented a scheduler to synchronize call logs from Twilio with recordings in Amazon S3, addressing data inconsistencies and ensuring accuracy.",
-      "Optimized performance with multithreading, data migration, and efficient SQL query optimization.",
-      "Contributed to technical documentation, schema design, and code reviews to ensure high-quality deliverables and maintainable code."
+      "Developed RESTful APIs using Spring Boot achieving 20% faster response times by optimizing database queries and leveraging asynchronous processing for non-blocking operations.",
+      "Deployed Redis caching to optimize API performance, resulting in a remarkable 25% reduction in latency and significantly decreased response time.",
+      "Integrated multiple third-party payment providers including PAYTM and Qwikcilver, enabling secure and seamless reward redemptions for 10K+ active users.",
+      "Implemented real-time Slack alerting for critical failures and anomaly detection in the reward processing pipeline, reducing incident response time by 40%.",
+      "Optimized reporting services using Redis caching, reducing processing time by 65% and lowering infrastructure costs by 20%."
     ],
     "imageSrc": "history/salescode.png",
     "techUsed": [
@@ -22,7 +22,7 @@
     "startDate": "Apr, 2025",
     "endDate": "Present",
     "experiences": [
-      "Collaborated in an Agile team to enhance the Communication-Service messaging system, achieving a 35% improvement in reliability, scalability, and performance.",
+      "Designed and developed a scalable, modular microservices-based reward system capable of handling 40,000+ requests per day with high availability and fault isolation.",
       "Developed and optimized RESTful Java APIs with Spring Boot, improving throughput, response times, and reducing latency.",
       "Performed unit testing and debugging, reducing error rates by 30% and ensuring high-quality deliverables through cross-team collaboration."
     ],

@@ -18,7 +18,7 @@ export const About = () => {
             <div>
               <h3>Backend Developer</h3>
               <p>
-              I&apos;am a Java Backend Developer with 2.8 years of hands-on experience in building scalable and efficient backend systems. I specialize in modernizing legacy applications, optimizing APIs, and leveraging cutting-edge technologies to deliver high-performance solutions.
+              I&apos;am a Java Backend Developer with 3 years of hands-on experience in building scalable and efficient backend systems. I specialize in modernizing legacy applications, optimizing APIs, and leveraging cutting-edge technologies to deliver high-performance solutions.
               </p>
             </div>
           </li>

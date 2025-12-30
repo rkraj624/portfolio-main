@@ -13,6 +13,7 @@
   /* White background for light mode */
   --gradient-bg: linear-gradient(90deg, rgba(7, 21, 45, 1) 70%, rgba(7, 21, 45, 0) 120%);
 
+  --color-scroll-button : black;
 
   /* Font */
   --font-roboto: "Roboto";
@@ -79,7 +80,7 @@
   --about-image-filter: invert(61%) sepia(90%) saturate(2763%) hue-rotate(171deg) brightness(100%) contrast(100%) drop-shadow(2px 4px 6px black);
 
 
-
+  --color-scroll-button : white;
 
   --max-screen-width: 1500px;
   /* Define padding for different breakpoints */
