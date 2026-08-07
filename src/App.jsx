@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import AdminDashboard from './admin/AdminDashboard';
 import TechBackground from './components/TechBackground';
 import TechLoader from './components/TechLoader';
+import AudioIntroduction from './components/AudioIntroduction';
 
 import { PORTFOLIO_DATA } from './data';
 import './index.css';
@@ -71,40 +72,40 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#090d16] text-[#f3f4f6] font-sans relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
       
+      {/* Permanent Static Ambient Glows & Interactive Tech Canvas Background */}
+      <TechBackground />
+      <div className="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed top-1/3 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+
       {/* Intro System Boot Tech Loader with AnimatePresence */}
       <AnimatePresence mode="wait">
         {isLoading && <TechLoader key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* Main Portfolio Content Revealed with Smooth Motion Animation */}
-      {!isLoading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
-        >
-          {/* Interactive Tech Matrix & Microservices Mesh Canvas Background */}
-          <TechBackground />
+      {/* Main Portfolio Content Revealed with Simultaneous Cross-Fade */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 1.0, ease: "easeInOut" }}
+        className={isLoading ? "pointer-events-none" : ""}
+      >
+        {/* Main Layout Sections */}
+        <Header personal={personal} scrolled={scrolled} />
+        
+        <main className="relative z-10">
+          <Hero personal={personal} summary={summary} />
+          <Experience experience={experience} />
+          <Projects keyProjects={keyProjects} personalProjects={personalProjects} />
+          <Skills skills={skills} />
+          <CustomSections customSections={portfolioData.customSections} />
+          <Achievements achievements={achievements} education={education} />
+        </main>
 
-          {/* Background Ambient Glows */}
-          <div className="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
-          <div className="fixed top-1/3 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+        {/* Floating Audio Introduction Player */}
+        <AudioIntroduction personal={personal} />
 
-          {/* Main Layout Sections */}
-          <Header personal={personal} scrolled={scrolled} />
-          
-          <main className="relative z-10">
-            <Hero personal={personal} summary={summary} />
-            <Experience experience={experience} />
-            <Projects keyProjects={keyProjects} personalProjects={personalProjects} />
-            <Skills skills={skills} />
-            <CustomSections customSections={portfolioData.customSections} />
-            <Achievements achievements={achievements} education={education} />
-          </main>
-
-          <Footer personal={personal} />
-        </motion.div>
-      )}
+        <Footer personal={personal} />
+      </motion.div>
 
     </div>
   );
