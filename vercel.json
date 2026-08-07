@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/save-data", "destination": "/api/save-data" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
