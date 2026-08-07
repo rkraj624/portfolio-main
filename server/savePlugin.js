@@ -1,15 +1,19 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { exec } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dataJsPath = path.resolve(__dirname, '../src/data.js');
+const rootDir = path.resolve(__dirname, '../');
+const dataJsPath = path.resolve(rootDir, 'src/data.js');
+const publicResumePath = path.resolve(rootDir, 'public/Ravi_Raja_Resume.pdf');
 
 export default function saveApiPlugin() {
   return {
     name: 'save-data-js-plugin',
     configureServer(server) {
+      // Endpoint 1: Save data.js and optional PDF upload, then auto git commit & push
       server.middlewares.use('/api/save-data', (req, res) => {
         if (req.method === 'POST') {
           let body = '';
@@ -19,14 +23,49 @@ export default function saveApiPlugin() {
 
           req.on('end', () => {
             try {
-              const updatedData = JSON.parse(body);
-              const fileContent = `export const PORTFOLIO_DATA = ${JSON.stringify(updatedData, null, 2)};\n`;
+              const { data, pushToGit, pdfBase64 } = JSON.parse(body);
               
+              // 1. Write data.js directly to disk
+              const fileContent = `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`;
               fs.writeFileSync(dataJsPath, fileContent, 'utf-8');
-              
-              res.statusCode = 200;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ success: true, message: 'data.js file updated directly on disk!' }));
+
+              // 2. If new Resume PDF provided in base64, save to public/Ravi_Raja_Resume.pdf
+              if (pdfBase64) {
+                const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+                fs.writeFileSync(publicResumePath, pdfBuffer);
+              }
+
+              // 3. Git Auto-Commit & Push ALL workspace changes to GitHub
+              if (pushToGit) {
+                const commitMsg = `chore: update portfolio contents via admin dashboard [${new Date().toLocaleString()}]`;
+                const gitCmd = `git add . && git commit -m "${commitMsg}" && git push origin main`;
+
+                exec(gitCmd, { cwd: rootDir }, (error, stdout, stderr) => {
+                  if (error) {
+                    console.error("Git Push Warning:", stderr || error.message);
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ 
+                      success: true, 
+                      gitPushed: false, 
+                      message: 'data.js & PDF saved to disk, but Git push requires manual authentication or network.' 
+                    }));
+                  } else {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ 
+                      success: true, 
+                      gitPushed: true, 
+                      message: 'Saved to disk and successfully pushed directly to GitHub!' 
+                    }));
+                  }
+                });
+              } else {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true, gitPushed: false, message: 'Saved to disk!' }));
+              }
+
             } catch (err) {
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');

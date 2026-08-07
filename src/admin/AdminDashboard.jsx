@@ -25,6 +25,10 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
   const [activeTab, setActiveTab] = useState('personal');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
+  const [pushToGit, setPushToGit] = useState(true);
+  const [resumePdfBase64, setResumePdfBase64] = useState(null);
+  const [pdfFileName, setPdfFileName] = useState('');
+
   const handlePersonalChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -33,24 +37,40 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
     }));
   };
 
-  const handleStatChange = (index, field, value) => {
-    const updatedStats = [...formData.personal.stats];
-    updatedStats[index][field] = value;
-    setFormData(prev => ({
-      ...prev,
-      personal: { ...prev.personal, stats: updatedStats }
-    }));
+  const handlePdfUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        alert('Please upload a valid PDF file.');
+        return;
+      }
+      setPdfFileName(file.name);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target.result.split(',')[1];
+        setResumePdfBase64(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSave = async () => {
     onUpdateData(formData);
     try {
-      await fetch('/api/save-data', {
+      const res = await fetch('/api/save-data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          data: formData,
+          pushToGit: pushToGit,
+          pdfBase64: resumePdfBase64
+        })
       });
+      const result = await res.json();
       setSavedSuccess(true);
+      if (result.gitPushed) {
+        alert("✅ Changes saved to disk and pushed directly to GitHub repository!");
+      }
       setTimeout(() => setSavedSuccess(false), 2500);
     } catch (err) {
       console.error("Failed to write data.js:", err);
@@ -196,6 +216,15 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
         </div>
 
         <div className="flex items-center gap-3">
+          <label className="flex items-center gap-1.5 text-xs text-sky-400 font-mono bg-sky-500/10 px-2.5 py-1.5 rounded-lg border border-sky-500/20 cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              checked={pushToGit} 
+              onChange={(e) => setPushToGit(e.target.checked)} 
+              className="rounded accent-sky-500"
+            />
+            <span>Auto-Push to GitHub</span>
+          </label>
           <button 
             onClick={exportJSON}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium border border-white/10 transition"
@@ -326,6 +355,23 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                   onChange={(e) => setFormData(prev => ({ ...prev, summary: e.target.value }))}
                   className="w-full bg-[#090d16] border border-white/10 rounded-xl p-3 text-xs focus:border-indigo-500 outline-none leading-relaxed"
                 />
+              </div>
+
+              {/* Upload Resume PDF section */}
+              <div className="p-4 bg-indigo-950/30 border border-indigo-500/30 rounded-xl space-y-2">
+                <label className="block text-xs font-bold text-sky-300">Upload New Resume PDF</label>
+                <p className="text-[11px] text-gray-400">Select a new PDF file from your computer to update <code className="text-sky-400">public/Ravi_Raja_Resume.pdf</code> automatically.</p>
+                <input 
+                  type="file" 
+                  accept="application/pdf" 
+                  onChange={handlePdfUpload}
+                  className="block w-full text-xs text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer"
+                />
+                {pdfFileName && (
+                  <p className="text-xs text-emerald-400 font-mono flex items-center gap-1 mt-1">
+                    <Check size={14} /> Selected: {pdfFileName} (Will update PDF on save & push)
+                  </p>
+                )}
               </div>
 
               <div className="pt-4 border-t border-white/10">
