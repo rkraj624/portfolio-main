@@ -13,7 +13,9 @@ import {
   Trash2,
   Download,
   Layers,
-  Sparkles
+  Sparkles,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data';
 
@@ -34,6 +36,7 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
 
   // Password Modal & Status Notification States
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState(null); // { type: 'success' | 'error', message: string }
 
@@ -386,14 +389,24 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
             <form onSubmit={handleSave} className="space-y-4">
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-1.5">Admin Password</label>
-                <input 
-                  type="password" 
-                  autoFocus
-                  placeholder="Enter admin password..."
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  className="w-full bg-[#090d16] border border-indigo-500/40 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:border-indigo-400 outline-none font-mono"
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    autoFocus
+                    placeholder="Enter admin password..."
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    className="w-full bg-[#090d16] border border-indigo-500/40 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-gray-500 focus:border-indigo-400 outline-none font-mono"
+                  />
+                  <button 
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 p-1 rounded-lg transition"
+                    title={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-2">
@@ -535,8 +548,11 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
 
               {/* Upload Profile Picture section */}
               <div className="p-4 bg-sky-950/30 border border-sky-500/30 rounded-xl space-y-2">
-                <label className="block text-xs font-bold text-sky-300">Upload New Profile Photo</label>
-                <p className="text-[11px] text-gray-400">Select a new image (JPG/PNG) to update your hero headshot (<code className="text-sky-400">public/avatar.jpg</code>).</p>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-sky-300">Upload New Profile Photo</label>
+                  <span className="text-[10px] font-mono bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-md">Optional</span>
+                </div>
+                <p className="text-[11px] text-gray-400">Optionally select a new image (JPG/PNG) to update your hero headshot (<code className="text-sky-400">public/avatar.jpg</code>). Leave empty to keep existing photo.</p>
                 <input 
                   type="file" 
                   accept="image/*" 
@@ -552,8 +568,11 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
 
               {/* Upload Resume PDF section */}
               <div className="p-4 bg-indigo-950/30 border border-indigo-500/30 rounded-xl space-y-2">
-                <label className="block text-xs font-bold text-sky-300">Upload New Resume PDF</label>
-                <p className="text-[11px] text-gray-400">Select a new PDF file from your computer to update <code className="text-sky-400">public/Ravi_Raja_Resume.pdf</code> automatically.</p>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-indigo-300">Upload New Resume PDF</label>
+                  <span className="text-[10px] font-mono bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-md">Optional</span>
+                </div>
+                <p className="text-[11px] text-gray-400">Optionally select a new PDF file to update <code className="text-indigo-400">public/Ravi_Raja_Resume.pdf</code>. Leave empty to keep existing resume.</p>
                 <input 
                   type="file" 
                   accept="application/pdf" 

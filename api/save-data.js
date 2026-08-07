@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
-  const { data, pdfBase64, pushToGit, password } = req.body || {};
+  const { data, pdfBase64, avatarBase64, pushToGit, password } = req.body || {};
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const REPO = 'rkraj624/portfolio-main';
@@ -28,52 +28,66 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, error: 'Unauthorized: Invalid Admin Password' });
   }
 
-  // 2. GitHub Token check
-  if (!GITHUB_TOKEN) {
+  // 2. If pushToGit is false or GITHUB_TOKEN is not set, return success without making GitHub API calls
+  if (!pushToGit || !GITHUB_TOKEN) {
     return res.status(200).json({
       success: true,
       gitPushed: false,
-      message: 'Saved in session! To enable direct auto-push from Vercel to GitHub, add GITHUB_TOKEN in your Vercel Project Environment Variables.'
+      message: 'Saved in local browser state!'
     });
   }
 
   try {
-    // Fetch current file SHA for src/data.js from GitHub API
-    const dataJsUrl = `https://api.github.com/repos/${REPO}/contents/src/data.js`;
-    const dataJsRes = await fetch(dataJsUrl, {
-      headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
-    });
-    const dataJsFile = await dataJsRes.json();
+    // 3. Update src/data.js on GitHub only if content has actually changed
+    if (data) {
+      const dataJsUrl = `https://api.github.com/repos/${REPO}/contents/src/data.js`;
+      const dataJsRes = await fetch(dataJsUrl, {
+        headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
+      });
+      
+      if (dataJsRes.ok) {
+        const dataJsFile = await dataJsRes.json();
+        const dataContentRaw = `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`;
+        const dataContentBase64 = Buffer.from(dataContentRaw).toString('base64');
+        
+        // Clean up newlines for exact string comparison
+        const existingClean = (dataJsFile.content || '').replace(/\s/g, '');
+        const newClean = dataContentBase64.replace(/\s/g, '');
 
-    // Update src/data.js on GitHub
-    const dataContentBase64 = Buffer.from(
-      `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`
-    ).toString('base64');
+        // Only call PUT API if the content is different!
+        if (existingClean !== newClean) {
+          const putRes = await fetch(dataJsUrl, {
+            method: 'PUT',
+            headers: {
+              Authorization: `token ${GITHUB_TOKEN}`,
+              'Content-Type': 'application/json',
+              'User-Agent': 'Vercel-Serverless'
+            },
+            body: JSON.stringify({
+              message: `chore: update portfolio contents via dashboard [${new Date().toLocaleString()}]`,
+              content: dataContentBase64,
+              sha: dataJsFile.sha,
+              branch: BRANCH
+            })
+          });
 
-    await fetch(dataJsUrl, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json',
-        'User-Agent': 'Vercel-Serverless'
-      },
-      body: JSON.stringify({
-        message: `chore: update portfolio contents via dashboard [${new Date().toLocaleString()}]`,
-        content: dataContentBase64,
-        sha: dataJsFile.sha,
-        branch: BRANCH
-      })
-    });
+          if (!putRes.ok) {
+            const errData = await putRes.json();
+            throw new Error(`GitHub PUT data.js error: ${errData.message || putRes.statusText}`);
+          }
+        }
+      }
+    }
 
-    // Update public/Ravi_Raja_Resume.pdf on GitHub if new PDF provided
+    // 4. Update public/Ravi_Raja_Resume.pdf on GitHub ONLY if new PDF uploaded
     if (pdfBase64) {
       const pdfUrl = `https://api.github.com/repos/${REPO}/contents/public/Ravi_Raja_Resume.pdf`;
       const pdfRes = await fetch(pdfUrl, {
         headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
       });
-      const pdfFile = await pdfRes.json();
+      const pdfFile = pdfRes.ok ? await pdfRes.json() : {};
 
-      await fetch(pdfUrl, {
+      const putPdfRes = await fetch(pdfUrl, {
         method: 'PUT',
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
@@ -87,17 +101,22 @@ export default async function handler(req, res) {
           branch: BRANCH
         })
       });
+
+      if (!putPdfRes.ok) {
+        const errData = await putPdfRes.json();
+        throw new Error(`GitHub PUT PDF error: ${errData.message || putPdfRes.statusText}`);
+      }
     }
 
-    // Update public/avatar.jpg on GitHub if new profile picture provided
+    // 5. Update public/avatar.jpg on GitHub ONLY if new avatar image uploaded
     if (avatarBase64) {
       const avatarUrl = `https://api.github.com/repos/${REPO}/contents/public/avatar.jpg`;
       const avatarRes = await fetch(avatarUrl, {
         headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
       });
-      const avatarFile = await avatarRes.json();
+      const avatarFile = avatarRes.ok ? await avatarRes.json() : {};
 
-      await fetch(avatarUrl, {
+      const putAvatarRes = await fetch(avatarUrl, {
         method: 'PUT',
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
@@ -107,16 +126,21 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           message: `chore: update avatar profile image via dashboard [${new Date().toLocaleString()}]`,
           content: avatarBase64,
-          sha: avatarFile ? avatarFile.sha : undefined,
+          sha: avatarFile.sha,
           branch: BRANCH
         })
       });
+
+      if (!putAvatarRes.ok) {
+        const errData = await putAvatarRes.json();
+        throw new Error(`GitHub PUT avatar error: ${errData.message || putAvatarRes.statusText}`);
+      }
     }
 
     return res.status(200).json({
       success: true,
       gitPushed: true,
-      message: 'Successfully updated src/data.js directly on GitHub via Vercel Serverless API!'
+      message: 'Successfully synced changes directly to GitHub via Vercel Serverless API!'
     });
 
   } catch (error) {
