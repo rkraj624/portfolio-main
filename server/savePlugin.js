@@ -13,7 +13,6 @@ export default function saveApiPlugin() {
   return {
     name: 'save-data-js-plugin',
     configureServer(server) {
-      // Endpoint 1: Save data.js and optional PDF upload, then auto git commit & push
       server.middlewares.use('/api/save-data', (req, res) => {
         if (req.method === 'POST') {
           let body = '';
@@ -23,7 +22,15 @@ export default function saveApiPlugin() {
 
           req.on('end', () => {
             try {
-              const { data, pushToGit, pdfBase64 } = JSON.parse(body);
+              const { data, pushToGit, pdfBase64, password } = JSON.parse(body);
+              const envPassword = process.env.ADMIN_PASSWORD;
+
+              // Password security check (if ADMIN_PASSWORD env is set)
+              if (envPassword && password !== envPassword) {
+                res.statusCode = 401;
+                res.setHeader('Content-Type', 'application/json');
+                return res.end(JSON.stringify({ success: false, error: 'Unauthorized: Invalid Admin Password' }));
+              }
               
               // 1. Write data.js directly to disk
               const fileContent = `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`;

@@ -28,6 +28,7 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
   const [pushToGit, setPushToGit] = useState(true);
   const [resumePdfBase64, setResumePdfBase64] = useState(null);
   const [pdfFileName, setPdfFileName] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
 
   const handlePersonalChange = (e) => {
     const { name, value } = e.target;
@@ -63,13 +64,18 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
         body: JSON.stringify({
           data: formData,
           pushToGit: pushToGit,
-          pdfBase64: resumePdfBase64
+          pdfBase64: resumePdfBase64,
+          password: adminPassword
         })
       });
       const result = await res.json();
+      if (!res.ok || result.error) {
+        alert("🔒 Access Denied: " + (result.error || "Invalid Admin Password"));
+        return;
+      }
       setSavedSuccess(true);
       if (result.gitPushed) {
-        alert("✅ Changes saved to disk and pushed directly to GitHub repository!");
+        alert("✅ Changes saved and pushed directly to GitHub repository!");
       }
       setTimeout(() => setSavedSuccess(false), 2500);
     } catch (err) {
@@ -216,6 +222,13 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
         </div>
 
         <div className="flex items-center gap-3">
+          <input 
+            type="password" 
+            placeholder="🔑 Admin Password" 
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            className="bg-[#090d16] border border-white/15 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:border-indigo-500 outline-none w-36"
+          />
           <label className="flex items-center gap-1.5 text-xs text-sky-400 font-mono bg-sky-500/10 px-2.5 py-1.5 rounded-lg border border-sky-500/20 cursor-pointer select-none">
             <input 
               type="checkbox" 
@@ -223,7 +236,7 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
               onChange={(e) => setPushToGit(e.target.checked)} 
               className="rounded accent-sky-500"
             />
-            <span>Auto-Push to GitHub</span>
+            <span>Auto-Push</span>
           </label>
           <button 
             onClick={exportJSON}

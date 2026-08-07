@@ -17,12 +17,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
-  const { data, pdfBase64, pushToGit } = req.body || {};
+  const { data, pdfBase64, pushToGit, password } = req.body || {};
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const REPO = 'rkraj624/portfolio-main';
   const BRANCH = 'main';
 
-  // If no GitHub Token is provided in Vercel Environment Variables, notify user
+  // 1. Password Security Check
+  if (ADMIN_PASSWORD && password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ success: false, error: 'Unauthorized: Invalid Admin Password' });
+  }
+
+  // 2. GitHub Token check
   if (!GITHUB_TOKEN) {
     return res.status(200).json({
       success: true,
@@ -32,14 +38,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Fetch current file SHA for src/data.js from GitHub API
+    // Fetch current file SHA for src/data.js from GitHub API
     const dataJsUrl = `https://api.github.com/repos/${REPO}/contents/src/data.js`;
     const dataJsRes = await fetch(dataJsUrl, {
       headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
     });
     const dataJsFile = await dataJsRes.json();
 
-    // 2. Update src/data.js on GitHub
+    // Update src/data.js on GitHub
     const dataContentBase64 = Buffer.from(
       `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`
     ).toString('base64');
@@ -59,7 +65,7 @@ export default async function handler(req, res) {
       })
     });
 
-    // 3. Update public/Ravi_Raja_Resume.pdf on GitHub if new PDF provided
+    // Update public/Ravi_Raja_Resume.pdf on GitHub if new PDF provided
     if (pdfBase64) {
       const pdfUrl = `https://api.github.com/repos/${REPO}/contents/public/Ravi_Raja_Resume.pdf`;
       const pdfRes = await fetch(pdfUrl, {
