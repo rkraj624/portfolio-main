@@ -25,7 +25,7 @@ export const PORTFOLIO_DATA = {
         "value": "60%"
       },
       {
-        "value": "10+",
+        "value": "15+",
         "label": "Live Projects"
       }
     ]
