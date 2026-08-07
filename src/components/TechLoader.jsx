@@ -15,9 +15,9 @@ export default function TechLoader({ onComplete }) {
   ];
 
   useEffect(() => {
-    // 10-second system boot loading sequence
-    const totalDurationMs = 1500; // ~9.5 seconds + 500ms pause at 100% = 10s total
-    const intervalMs = 100;
+    // 10-second system boot loading sequence with 30ms ultra-smooth 60fps tick rate
+    const totalDurationMs = 2500;
+    const intervalMs = 30; // 33 ticks/sec for 60fps smoothness
     const totalTicks = totalDurationMs / intervalMs;
     const incrementPerTick = 100 / totalTicks;
 
@@ -31,7 +31,7 @@ export default function TechLoader({ onComplete }) {
           return 100;
         }
         const next = prev + incrementPerTick;
-        return next > 100 ? 100 : Math.floor(next);
+        return next > 100 ? 100 : Number(next.toFixed(2));
       });
     }, intervalMs);
 
@@ -49,8 +49,8 @@ export default function TechLoader({ onComplete }) {
   return (
     <motion.div 
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
-      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.2, ease: "easeInOut" }}
       className="fixed inset-0 z-50 bg-[#090d16] flex flex-col items-center justify-center p-6 text-white overflow-hidden select-none"
     >
       {/* Background Radial Glow */}
@@ -97,16 +97,16 @@ export default function TechLoader({ onComplete }) {
               <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
               SYSTEM_BOOT_SEQUENCE
             </span>
-            <span className="text-indigo-300 font-bold">{progress}%</span>
+            <span className="text-indigo-300 font-bold">{Math.floor(progress)}%</span>
           </div>
 
           {/* Outer Track */}
           <div className="h-2.5 w-full bg-[#111827] border border-white/10 rounded-full overflow-hidden p-0.5 shadow-inner">
-            {/* Animated Progress Fill */}
+            {/* Animated Progress Fill with Framer Motion linear easing */}
             <motion.div 
-              className="h-full bg-gradient-to-r from-indigo-500 via-sky-400 to-emerald-400 rounded-full"
-              style={{ width: `${progress}%` }}
-              transition={{ ease: 'easeOut' }}
+              className="h-full bg-gradient-to-r from-indigo-500 via-sky-400 to-emerald-400 rounded-full shadow-md shadow-sky-400/20"
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.15, ease: "linear" }}
             />
           </div>
         </div>
