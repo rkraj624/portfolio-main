@@ -28,7 +28,14 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
   const [pushToGit, setPushToGit] = useState(true);
   const [resumePdfBase64, setResumePdfBase64] = useState(null);
   const [pdfFileName, setPdfFileName] = useState('');
+  const [avatarBase64, setAvatarBase64] = useState(null);
+  const [avatarFileName, setAvatarFileName] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
+
+  // Password Modal & Status Notification States
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState(null); // { type: 'success' | 'error', message: string }
 
   const handlePersonalChange = (e) => {
     const { name, value } = e.target;
@@ -38,11 +45,56 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
     }));
   };
 
+  const handleStatChange = (index, field, value) => {
+    const updatedStats = [...formData.personal.stats];
+    updatedStats[index][field] = value;
+    setFormData(prev => ({
+      ...prev,
+      personal: { ...prev.personal, stats: updatedStats }
+    }));
+  };
+
+  const handleAddStat = () => {
+    if (formData.personal.stats.length >= 4) {
+      setNotification({ type: 'error', message: 'Maximum 4 Hero Metric cards allowed!' });
+      return;
+    }
+    const newStat = { value: '99.9%', label: 'Metric Description' };
+    setFormData(prev => ({
+      ...prev,
+      personal: { ...prev.personal, stats: [...prev.personal.stats, newStat] }
+    }));
+  };
+
+  const handleRemoveStat = (statIdx) => {
+    setFormData(prev => ({
+      ...prev,
+      personal: { ...prev.personal, stats: prev.personal.stats.filter((_, idx) => idx !== statIdx) }
+    }));
+  };
+
+  const handleAvatarUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setNotification({ type: 'error', message: 'Please upload a valid image file (JPG/PNG).' });
+        return;
+      }
+      setAvatarFileName(file.name);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target.result.split(',')[1];
+        setAvatarBase64(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handlePdfUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (file.type !== 'application/pdf') {
-        alert('Please upload a valid PDF file.');
+        setNotification({ type: 'error', message: 'Please upload a valid PDF file.' });
         return;
       }
       setPdfFileName(file.name);
@@ -55,8 +107,20 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
     }
   };
 
-  const handleSave = async () => {
+  const openSaveModal = () => {
+    setShowPasswordModal(true);
+  };
+
+  const handleSave = async (e) => {
+    e?.preventDefault();
+    if (!adminPassword.trim()) {
+      setNotification({ type: 'error', message: 'Please enter your Admin Password.' });
+      return;
+    }
+
+    setIsSubmitting(true);
     onUpdateData(formData);
+
     try {
       const res = await fetch('/api/save-data', {
         method: 'POST',
@@ -65,21 +129,46 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
           data: formData,
           pushToGit: pushToGit,
           pdfBase64: resumePdfBase64,
+          avatarBase64: avatarBase64,
           password: adminPassword
         })
       });
       const result = await res.json();
+
       if (!res.ok || result.error) {
-        alert("🔒 Access Denied: " + (result.error || "Invalid Admin Password"));
+        setNotification({ 
+          type: 'error', 
+          message: result.error || 'Invalid Admin Password! Please check environment variable.' 
+        });
+        setIsSubmitting(false);
         return;
       }
+
       setSavedSuccess(true);
+      setShowPasswordModal(false);
+      setIsSubmitting(false);
+
       if (result.gitPushed) {
-        alert("✅ Changes saved and pushed directly to GitHub repository!");
+        setNotification({ 
+          type: 'success', 
+          message: '✨ Changes saved successfully & pushed directly to GitHub repository! 🚀' 
+        });
+      } else {
+        setNotification({ 
+          type: 'success', 
+          message: '✨ Changes saved locally to disk successfully!' 
+        });
       }
-      setTimeout(() => setSavedSuccess(false), 2500);
+
+      setTimeout(() => {
+        setSavedSuccess(false);
+        setNotification(null);
+      }, 5000);
+
     } catch (err) {
       console.error("Failed to write data.js:", err);
+      setNotification({ type: 'error', message: 'Server Connection Error: Unable to save changes.' });
+      setIsSubmitting(false);
     }
   };
 
@@ -222,13 +311,6 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <input 
-            type="password" 
-            placeholder="🔑 Admin Password" 
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            className="bg-[#090d16] border border-white/15 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:border-indigo-500 outline-none w-36"
-          />
           <label className="flex items-center gap-1.5 text-xs text-sky-400 font-mono bg-sky-500/10 px-2.5 py-1.5 rounded-lg border border-sky-500/20 cursor-pointer select-none">
             <input 
               type="checkbox" 
@@ -252,7 +334,7 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
             <RotateCcw size={14} /> Reset
           </button>
           <button 
-            onClick={handleSave}
+            onClick={openSaveModal}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25 transition active:scale-95"
           >
             {savedSuccess ? <Check size={16} className="text-emerald-300" /> : <Save size={16} />}
@@ -260,6 +342,87 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
           </button>
         </div>
       </div>
+
+      {/* Glassmorphic Floating Notification Banner */}
+      {notification && (
+        <div className="fixed top-20 right-6 z-50 animate-bounce">
+          <div className={`px-5 py-3.5 rounded-2xl backdrop-blur-xl border shadow-2xl flex items-center gap-3 text-xs font-semibold ${
+            notification.type === 'success' 
+              ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-200 shadow-emerald-900/40' 
+              : 'bg-rose-950/80 border-rose-500/40 text-rose-200 shadow-rose-900/40'
+          }`}>
+            <span className="text-base">{notification.type === 'success' ? '✨' : '🔒'}</span>
+            <span>{notification.message}</span>
+            <button 
+              onClick={() => setNotification(null)}
+              className="ml-3 text-gray-400 hover:text-white font-bold"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Security Verification Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#111827] border border-indigo-500/30 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 relative">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <span>🔒 Security Verification</span>
+              </h3>
+              <button 
+                onClick={() => setShowPasswordModal(false)}
+                className="text-gray-400 hover:text-white text-xs font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-300 leading-relaxed">
+              Please enter your <code className="text-sky-400 font-mono">ADMIN_PASSWORD</code> to authorize & apply changes live to your portfolio.
+            </p>
+
+            <form onSubmit={handleSave} className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">Admin Password</label>
+                <input 
+                  type="password" 
+                  autoFocus
+                  placeholder="Enter admin password..."
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  className="w-full bg-[#090d16] border border-indigo-500/40 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:border-indigo-400 outline-none font-mono"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button 
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-gray-300 transition"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25 transition active:scale-95 disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <span>Verifying...</span>
+                  ) : (
+                    <>
+                      <Check size={16} />
+                      <span>Confirm & Apply</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 max-w-6xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-12 gap-8">
         
@@ -370,6 +533,23 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                 />
               </div>
 
+              {/* Upload Profile Picture section */}
+              <div className="p-4 bg-sky-950/30 border border-sky-500/30 rounded-xl space-y-2">
+                <label className="block text-xs font-bold text-sky-300">Upload New Profile Photo</label>
+                <p className="text-[11px] text-gray-400">Select a new image (JPG/PNG) to update your hero headshot (<code className="text-sky-400">public/avatar.jpg</code>).</p>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleAvatarUpload}
+                  className="block w-full text-xs text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-600 file:text-white hover:file:bg-sky-500 cursor-pointer"
+                />
+                {avatarFileName && (
+                  <p className="text-xs text-emerald-400 font-mono flex items-center gap-1 mt-1">
+                    <Check size={14} /> Selected: {avatarFileName} (Will update avatar image on save & push)
+                  </p>
+                )}
+              </div>
+
               {/* Upload Resume PDF section */}
               <div className="p-4 bg-indigo-950/30 border border-indigo-500/30 rounded-xl space-y-2">
                 <label className="block text-xs font-bold text-sky-300">Upload New Resume PDF</label>
@@ -388,27 +568,55 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
               </div>
 
               <div className="pt-4 border-t border-white/10">
-                <h3 className="text-xs font-bold text-gray-300 mb-3">Hero Metric Cards</h3>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-300">Hero Metric Cards</h3>
+                    <p className="text-[11px] text-gray-400">Manage key metrics displayed in hero section (Max 4 cards)</p>
+                  </div>
+                  {formData.personal.stats.length < 4 && (
+                    <button 
+                      onClick={handleAddStat}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition"
+                    >
+                      <Plus size={14} /> Add Metric Card ({formData.personal.stats.length}/4)
+                    </button>
+                  )}
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {formData.personal.stats.map((stat, idx) => (
-                    <div key={idx} className="p-3 bg-[#090d16] border border-white/10 rounded-xl flex gap-3">
-                      <div className="flex-1">
-                        <label className="text-[10px] text-gray-500 block">Value</label>
-                        <input 
-                          type="text" 
-                          value={stat.value} 
-                          onChange={(e) => handleStatChange(idx, 'value', e.target.value)}
-                          className="w-full bg-transparent font-mono font-bold text-sky-400 text-xs outline-none"
-                        />
+                    <div key={idx} className="p-3.5 bg-[#090d16] border border-white/10 rounded-xl space-y-2 relative group">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-1">
+                        <span className="text-[10px] font-mono text-sky-400">Card #{idx + 1}</span>
+                        {formData.personal.stats.length > 1 && (
+                          <button 
+                            onClick={() => handleRemoveStat(idx)}
+                            className="text-rose-400 hover:text-rose-300 p-0.5 text-[10px] flex items-center gap-0.5"
+                            title="Delete Card"
+                          >
+                            <Trash2 size={12} /> Remove
+                          </button>
+                        )}
                       </div>
-                      <div className="flex-1">
-                        <label className="text-[10px] text-gray-500 block">Label</label>
-                        <input 
-                          type="text" 
-                          value={stat.label} 
-                          onChange={(e) => handleStatChange(idx, 'label', e.target.value)}
-                          className="w-full bg-transparent text-gray-300 text-xs outline-none"
-                        />
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] text-gray-500 block">Value</label>
+                          <input 
+                            type="text" 
+                            value={stat.value} 
+                            onChange={(e) => handleStatChange(idx, 'value', e.target.value)}
+                            className="w-full bg-[#111827] border border-white/10 rounded-md p-1.5 font-mono font-bold text-sky-400 text-xs outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-gray-500 block">Label</label>
+                          <input 
+                            type="text" 
+                            value={stat.label} 
+                            onChange={(e) => handleStatChange(idx, 'label', e.target.value)}
+                            className="w-full bg-[#111827] border border-white/10 rounded-md p-1.5 text-gray-300 text-xs outline-none"
+                          />
+                        </div>
                       </div>
                     </div>
                   ))}

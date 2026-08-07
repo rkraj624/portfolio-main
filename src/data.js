@@ -23,6 +23,10 @@ export const PORTFOLIO_DATA = {
       {
         "label": "Failure Reduction",
         "value": "60%"
+      },
+      {
+        "value": "10+",
+        "label": "Live Projects"
       }
     ]
   },

@@ -89,6 +89,30 @@ export default async function handler(req, res) {
       });
     }
 
+    // Update public/avatar.jpg on GitHub if new profile picture provided
+    if (avatarBase64) {
+      const avatarUrl = `https://api.github.com/repos/${REPO}/contents/public/avatar.jpg`;
+      const avatarRes = await fetch(avatarUrl, {
+        headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
+      });
+      const avatarFile = await avatarRes.json();
+
+      await fetch(avatarUrl, {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          'Content-Type': 'application/json',
+          'User-Agent': 'Vercel-Serverless'
+        },
+        body: JSON.stringify({
+          message: `chore: update avatar profile image via dashboard [${new Date().toLocaleString()}]`,
+          content: avatarBase64,
+          sha: avatarFile ? avatarFile.sha : undefined,
+          branch: BRANCH
+        })
+      });
+    }
+
     return res.status(200).json({
       success: true,
       gitPushed: true,
