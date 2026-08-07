@@ -8,6 +8,7 @@ import CustomSections from './components/CustomSections';
 import Achievements from './components/Achievements';
 import Footer from './components/Footer';
 import AdminDashboard from './admin/AdminDashboard';
+import TechBackground from './components/TechBackground';
 
 import { PORTFOLIO_DATA } from './data';
 import './index.css';
@@ -65,8 +66,11 @@ export default function App() {
 
   // Default Route: /
   return (
-    <div className="min-h-screen bg-[#090d16] text-[#f3f4f6] font-sans relative selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#090d16] text-[#f3f4f6] font-sans relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
       
+      {/* Interactive Tech Matrix & Microservices Mesh Canvas Background */}
+      <TechBackground />
+
       {/* Background Ambient Glows */}
       <div className="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="fixed top-1/3 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
@@ -74,7 +78,7 @@ export default function App() {
       {/* Main Layout Sections */}
       <Header personal={personal} scrolled={scrolled} />
       
-      <main>
+      <main className="relative z-10">
         <Hero personal={personal} summary={summary} />
         <Experience experience={experience} />
         <Projects keyProjects={keyProjects} personalProjects={personalProjects} />

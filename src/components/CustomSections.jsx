@@ -9,7 +9,7 @@ export default function CustomSections({ customSections }) {
   return (
     <>
       {customSections.map((sec, idx) => (
-        <section key={sec.id || idx} id={sec.id || `custom-${idx}`} className="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+        <section key={sec.id || idx} id={sec.id || `custom-${idx}`} className="py-20 px-6 max-w-6xl mx-auto">
           <motion.div 
             initial="hidden" 
             whileInView="visible" 

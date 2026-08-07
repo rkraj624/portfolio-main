@@ -14,7 +14,7 @@ export default function Header({ personal, scrolled }) {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#090d16]/80 backdrop-blur-md border-b border-white/10 py-3 shadow-lg' : 'bg-transparent py-5'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 py-4 ${scrolled ? 'bg-[#090d16]/95 backdrop-blur-md shadow-2xl' : 'bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2 font-mono text-lg font-bold tracking-tight text-white hover:opacity-80 transition">
           <span className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-sky-400 flex items-center justify-center text-white text-sm shadow-md shadow-indigo-500/20">RR</span>

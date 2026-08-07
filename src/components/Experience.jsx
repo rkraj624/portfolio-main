@@ -5,11 +5,11 @@ import { fadeInUp } from '../config/constants';
 
 export default function Experience({ experience }) {
   return (
-    <section id="experience" className="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+    <section id="experience" className="py-20 px-6 max-w-6xl mx-auto">
       <motion.div 
         initial="hidden" 
         whileInView="visible" 
-        viewport={{ once: true, margin: "-100px" }} 
+        viewport={{ once: true, amount: 0.2 }} 
         variants={fadeInUp}
         className="flex items-center gap-3 mb-12"
       >
@@ -27,7 +27,7 @@ export default function Experience({ experience }) {
           <motion.div 
             initial="hidden" 
             whileInView="visible" 
-            viewport={{ once: true, margin: "-80px" }} 
+            viewport={{ once: true, amount: 0.15 }} 
             variants={fadeInUp}
             key={idx} 
             className="p-6 sm:p-8 rounded-2xl bg-[#111827]/60 border border-white/10 relative overflow-hidden group hover:border-indigo-500/40 transition duration-300"

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Footer({ personal }) {
   return (
-    <footer className="py-12 border-t border-white/10 text-center text-xs text-gray-500">
+    <footer className="py-6 border-t border-white/10 text-center text-xs text-gray-500 relative z-10">
       <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 {personal.name}. Built with React, Framer Motion & Tailwind Aesthetics.</p>
         <div className="flex items-center gap-6">

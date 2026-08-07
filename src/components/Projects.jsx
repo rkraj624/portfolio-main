@@ -5,11 +5,11 @@ import { fadeInUp, staggerContainer } from '../config/constants';
 
 export default function Projects({ keyProjects, personalProjects }) {
   return (
-    <section id="projects" className="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+    <section id="projects" className="py-20 px-6 max-w-6xl mx-auto">
       <motion.div 
         initial="hidden" 
         whileInView="visible" 
-        viewport={{ once: true, margin: "-100px" }} 
+        viewport={{ once: true, amount: 0.2 }} 
         variants={fadeInUp}
         className="flex items-center gap-3 mb-12"
       >
@@ -25,7 +25,7 @@ export default function Projects({ keyProjects, personalProjects }) {
       <motion.div 
         initial="hidden" 
         whileInView="visible" 
-        viewport={{ once: true, margin: "-50px" }} 
+        viewport={{ once: true, amount: 0.15 }} 
         variants={staggerContainer}
         className="grid grid-cols-1 md:grid-cols-3 gap-6"
       >
@@ -69,7 +69,7 @@ export default function Projects({ keyProjects, personalProjects }) {
             <motion.div 
               initial="hidden" 
               whileInView="visible" 
-              viewport={{ once: true, margin: "-80px" }} 
+              viewport={{ once: true, amount: 0.15 }} 
               variants={fadeInUp}
               key={pIdx}
               className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/40 to-sky-950/40 border border-indigo-500/30 shadow-2xl"

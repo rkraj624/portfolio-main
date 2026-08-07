@@ -5,14 +5,14 @@ import { fadeInUp } from '../config/constants';
 
 export default function Achievements({ achievements, education }) {
   return (
-    <section id="achievements" className="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+    <section id="achievements" className="py-20 px-6 max-w-6xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         
         {/* Achievements */}
         <motion.div 
           initial="hidden" 
           whileInView="visible" 
-          viewport={{ once: true, margin: "-80px" }} 
+          viewport={{ once: true, amount: 0.15 }} 
           variants={fadeInUp}
         >
           <div className="flex items-center gap-3 mb-8">
@@ -50,7 +50,7 @@ export default function Achievements({ achievements, education }) {
         <motion.div 
           initial="hidden" 
           whileInView="visible" 
-          viewport={{ once: true, margin: "-80px" }} 
+          viewport={{ once: true, amount: 0.15 }} 
           variants={fadeInUp}
         >
           <div className="flex items-center gap-3 mb-8">
