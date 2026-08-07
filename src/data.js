@@ -174,6 +174,19 @@ export const PORTFOLIO_DATA = {
         "Full refresh token lifecycle (issuance, rotation, revocation), reducing repeated login requests by 30%.",
         "Engineered concurrent session handling with consistent token validation across simultaneous user sessions."
       ]
+    },
+    {
+      "name": "New Personal Project",
+      "tagline": "Open source system / tool description",
+      "github": "https://github.com/rkraj-portfolio",
+      "tech": [
+        "Java",
+        "Spring Boot",
+        "React"
+      ],
+      "features": [
+        "Feature 1: Scalable authentication and session lifecycle."
+      ]
     }
   ],
   "achievements": [
