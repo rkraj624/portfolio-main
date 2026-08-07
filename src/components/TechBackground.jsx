@@ -20,26 +20,26 @@ export default function TechBackground() {
     window.addEventListener('resize', handleResize);
 
     // Matrix Code / Floating Binary Bits & Microservice Network Nodes
-    const symbols = ['0', '1', '{ }', 'java', 'kafka', 'redis', 'k8s', 'docker', '%', '01', '</>', 'REST API', 'microservices', 'AWS', 'Spring Boot', 'Java', "maven"];
+    const symbols = ['0', '1', '{ }', 'java', 'kafka', 'redis', 'k8s', 'docker', '%', '01', '</>', 'REST API', 'microservices', 'AWS', 'Spring Boot', 'Java', 'maven', 'JWT', 'MySQL', 'Postgres', 'JPA', 'Jenkins', 'DynamoDB', 'CI/CD'];
     
     // Floating tech text particles
-    const particles = Array.from({ length: 60 }, () => ({
+    const particles = Array.from({ length: 50 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       symbol: symbols[Math.floor(Math.random() * symbols.length)],
-      fontSize: Math.floor(Math.random() * 6) + 13,
-      speedY: -(Math.random() * 0.5 + 0.2),
-      speedX: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.35 + 0.5, // High opacity (50% - 85%)
+      fontSize: Math.floor(Math.random() * 5) + 12,
+      speedY: -(Math.random() * 0.4 + 0.18),
+      speedX: (Math.random() - 0.5) * 0.25,
+      opacity: Math.random() * 0.40 + 0.60, // Gently balanced opacity (25% - 55%)
     }));
 
     // Distributed Nodes for Network Lines
-    const nodes = Array.from({ length: 35 }, () => ({
+    const nodes = Array.from({ length: 30 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      radius: Math.random() * 2 + 2.5,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      radius: Math.random() * 2 + 1.8,
     }));
 
     const render = () => {
@@ -55,7 +55,7 @@ export default function TechBackground() {
         if (nodeA.y < 0 || nodeA.y > height) nodeA.vy *= -1;
 
         // Draw node pulse point
-        ctx.fillStyle = '#38bdf8'; // Bright Sky Blue
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.9)'; // Sky Blue dot
         ctx.beginPath();
         ctx.arc(nodeA.x, nodeA.y, nodeA.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -66,10 +66,10 @@ export default function TechBackground() {
           const dy = nodeA.y - nodeB.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          // Connect nodes within 180px proximity
-          if (dist < 180) {
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.7 * (1 - dist / 180)})`; // Vivid Indigo Line
-            ctx.lineWidth = 1.6;
+          // Connect nodes within 170px proximity
+          if (dist < 170) {
+            ctx.strokeStyle = `rgba(99, 102, 241, ${0.45 * (1 - dist / 170)})`; // Soft vivid Indigo Line (max 45%)
+            ctx.lineWidth = 1.2;
             ctx.beginPath();
             ctx.moveTo(nodeA.x, nodeA.y);
             ctx.lineTo(nodeB.x, nodeB.y);
