@@ -28,17 +28,19 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, error: 'Unauthorized: Invalid Admin Password' });
   }
 
-  // 2. If pushToGit is false or GITHUB_TOKEN is not set, return success without making GitHub API calls
+  // 2. If pushToGit is false or GITHUB_TOKEN is missing, return early
   if (!pushToGit || !GITHUB_TOKEN) {
     return res.status(200).json({
       success: true,
       gitPushed: false,
-      message: 'Saved in local browser state!'
+      message: 'No GitHub push executed (Auto-Push is off or GITHUB_TOKEN missing).'
     });
   }
 
   try {
-    // 3. Update src/data.js on GitHub only if content has actually changed
+    let hasAnyChangesPushed = false;
+
+    // 3. Check & Update src/data.js on GitHub only if content has actually changed
     if (data) {
       const dataJsUrl = `https://api.github.com/repos/${REPO}/contents/src/data.js`;
       const dataJsRes = await fetch(dataJsUrl, {
@@ -50,11 +52,11 @@ export default async function handler(req, res) {
         const dataContentRaw = `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`;
         const dataContentBase64 = Buffer.from(dataContentRaw).toString('base64');
         
-        // Clean up newlines for exact string comparison
+        // Normalize whitespace for exact string comparison
         const existingClean = (dataJsFile.content || '').replace(/\s/g, '');
         const newClean = dataContentBase64.replace(/\s/g, '');
 
-        // Only call PUT API if the content is different!
+        // ONLY trigger GitHub API call if the data has actually changed!
         if (existingClean !== newClean) {
           const putRes = await fetch(dataJsUrl, {
             method: 'PUT',
@@ -75,6 +77,7 @@ export default async function handler(req, res) {
             const errData = await putRes.json();
             throw new Error(`GitHub PUT data.js error: ${errData.message || putRes.statusText}`);
           }
+          hasAnyChangesPushed = true;
         }
       }
     }
@@ -106,6 +109,7 @@ export default async function handler(req, res) {
         const errData = await putPdfRes.json();
         throw new Error(`GitHub PUT PDF error: ${errData.message || putPdfRes.statusText}`);
       }
+      hasAnyChangesPushed = true;
     }
 
     // 5. Update public/avatar.jpg on GitHub ONLY if new avatar image uploaded
@@ -135,12 +139,21 @@ export default async function handler(req, res) {
         const errData = await putAvatarRes.json();
         throw new Error(`GitHub PUT avatar error: ${errData.message || putAvatarRes.statusText}`);
       }
+      hasAnyChangesPushed = true;
+    }
+
+    if (!hasAnyChangesPushed) {
+      return res.status(200).json({
+        success: true,
+        gitPushed: false,
+        message: 'No changes detected. GitHub push skipped!'
+      });
     }
 
     return res.status(200).json({
       success: true,
       gitPushed: true,
-      message: 'Successfully synced changes directly to GitHub via Vercel Serverless API!'
+      message: 'Successfully synced changes directly to GitHub!'
     });
 
   } catch (error) {

@@ -33,23 +33,45 @@ export default function saveApiPlugin() {
                 return res.end(JSON.stringify({ success: false, error: 'Unauthorized: Invalid Admin Password' }));
               }
               
-              // 1. Write data.js directly to disk
-              const fileContent = `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`;
-              fs.writeFileSync(dataJsPath, fileContent, 'utf-8');
+              // 1. Read existing data.js to compare content
+              const newFileContent = `export const PORTFOLIO_DATA = ${JSON.stringify(data, null, 2)};\n`;
+              let existingContent = '';
+              if (fs.existsSync(dataJsPath)) {
+                existingContent = fs.readFileSync(dataJsPath, 'utf-8');
+              }
 
-              // 2. Save new Resume PDF to public/Ravi_Raja_Resume.pdf if provided
+              // Clean whitespace for exact diff check
+              const isDataChanged = existingContent.replace(/\s/g, '') !== newFileContent.replace(/\s/g, '');
+
+              // If NO changes were made to data, PDF, or avatar photo, skip git push & disk write!
+              if (!isDataChanged && !pdfBase64 && !avatarBase64) {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                return res.end(JSON.stringify({ 
+                  success: true, 
+                  gitPushed: false, 
+                  message: 'No changes detected. Git push skipped!' 
+                }));
+              }
+
+              // Save data.js directly to disk if changed
+              if (isDataChanged) {
+                fs.writeFileSync(dataJsPath, newFileContent, 'utf-8');
+              }
+
+              // Save new Resume PDF to public/Ravi_Raja_Resume.pdf if provided
               if (pdfBase64) {
                 const pdfBuffer = Buffer.from(pdfBase64, 'base64');
                 fs.writeFileSync(publicResumePath, pdfBuffer);
               }
 
-              // 3. Save new Profile Picture image to public/avatar.jpg if provided
+              // Save new Profile Picture image to public/avatar.jpg if provided
               if (avatarBase64) {
                 const avatarBuffer = Buffer.from(avatarBase64, 'base64');
                 fs.writeFileSync(publicAvatarPath, avatarBuffer);
               }
 
-              // 4. Git Auto-Commit & Push ALL workspace changes to GitHub
+              // Git Auto-Commit & Push ONLY if changes occurred and pushToGit is enabled
               if (pushToGit) {
                 const commitMsg = `chore: update portfolio contents via admin dashboard [${new Date().toLocaleString()}]`;
                 const gitCmd = `git add . && git commit -m "${commitMsg}" && git push origin main`;
@@ -62,7 +84,7 @@ export default function saveApiPlugin() {
                     res.end(JSON.stringify({ 
                       success: true, 
                       gitPushed: false, 
-                      message: 'Data saved to disk, but Git push requires manual authentication or network.' 
+                      message: 'Data saved to disk, but Git push skipped or requires manual authentication.' 
                     }));
                   } else {
                     res.statusCode = 200;
