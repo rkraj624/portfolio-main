@@ -178,6 +178,23 @@ export const PORTFOLIO_DATA = {
         "Full refresh token lifecycle (issuance, rotation, revocation), reducing repeated login requests by 30%.",
         "Engineered concurrent session handling with consistent token validation across simultaneous user sessions."
       ]
+    },
+    {
+      "name": "Portfolio",
+      "tagline": "Customizable Portfolio Application ",
+      "github": "https://github.com/rkraj-portfolio",
+      "tech": [
+        "React",
+        "JavaScript",
+        "Node",
+        "Tailwind CSS",
+        "FramerMotion"
+      ],
+      "features": [
+        "A modern, sleek, and fully customizable portfolio application designed specifically for Senior Backend Engineers with a built-in live admin dashboard and direct disk file persistence.",
+        "",
+        "The application features a hidden, full-blown admin dashboard accessible, that allows live editing of all portfolio contents without opening an editor!"
+      ]
     }
   ],
   "achievements": [
