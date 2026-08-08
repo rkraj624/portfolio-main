@@ -2,155 +2,68 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Sparkles, Square, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function AudioIntroduction({ personal }) {
+export default function AudioIntroduction() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showNotification, setShowNotification] = useState(true);
-  const [hasCustomAudio, setHasCustomAudio] = useState(false);
   
   const audioRef = useRef(null);
-  const synthTimerRef = useRef(null);
-
-  const introText = `Hi, I am ${personal?.name || 'Ravi Raja'}, a Senior Backend Engineer specializing in Java, Spring Boot, Microservices, Apache Kafka, Redis, and High-Throughput Distributed Systems. I have built scalable enterprise architectures, solved over 750 Data Structures and Algorithms problems, and achieved 99.99% system uptime under peak traffic. I am actively looking for Senior Software Engineer and Backend Lead opportunities. Feel free to explore my portfolio and reach out to me!`;
 
   useEffect(() => {
-    // Check if user has uploaded custom voice audio file at public/intro.mp3
-    const customAudio = new Audio('/intro.mp3');
-    customAudio.oncanplaythrough = () => {
-      setHasCustomAudio(true);
+    // Custom voice recording player initialized from public/intro.mp3
+    audioRef.current = new Audio('/intro.mp3');
+
+    audioRef.current.ontimeupdate = () => {
+      if (audioRef.current && audioRef.current.duration) {
+        const currentProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+        setProgress(currentProgress);
+      }
     };
-    customAudio.onerror = () => {
-      setHasCustomAudio(false);
+
+    audioRef.current.onended = () => {
+      setIsPlaying(false);
+      setProgress(0);
+      if (audioRef.current) audioRef.current.currentTime = 0;
     };
 
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
-      }
-      if (synthTimerRef.current) {
-        clearInterval(synthTimerRef.current);
+        audioRef.current = null;
       }
     };
   }, []);
 
   const handleStartOver = (e) => {
     e.stopPropagation();
-    
-    if (hasCustomAudio && audioRef.current) {
+    if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      setProgress(0);
-      setIsPlaying(false);
-    } else if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      if (synthTimerRef.current) clearInterval(synthTimerRef.current);
       setProgress(0);
       setIsPlaying(false);
     }
   };
 
   const handleTogglePlay = () => {
-    // 1. If user uploaded custom MP3 recording at public/intro.mp3
-    if (hasCustomAudio) {
-      if (!audioRef.current) {
-        audioRef.current = new Audio('/intro.mp3');
-        
-        audioRef.current.ontimeupdate = () => {
-          if (audioRef.current.duration) {
-            const currentProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-            setProgress(currentProgress);
-          }
-        };
-
-        audioRef.current.onended = () => {
-          setIsPlaying(false);
-          setProgress(0);
-          if (audioRef.current) audioRef.current.currentTime = 0;
-        };
-      }
-
-      if (isPlaying) {
-        audioRef.current.pause(); // Pause at current bookmark position
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play().then(() => {
-          setIsPlaying(true);
-          setShowNotification(false);
-        }).catch(err => {
-          console.error("Audio playback error:", err);
-        });
-      }
-      return;
-    }
-
-    // 2. Fallback to Web Speech Synthesis with bookmark resume support
-    if (!('speechSynthesis' in window)) return;
+    if (!audioRef.current) return;
 
     if (isPlaying) {
-      window.speechSynthesis.pause(); // Pause Web Speech at exact word bookmark
-      if (synthTimerRef.current) clearInterval(synthTimerRef.current);
+      audioRef.current.pause(); // Bookmark pause position
       setIsPlaying(false);
     } else {
-      if (window.speechSynthesis.paused) {
-        // Resume from paused bookmark
-        window.speechSynthesis.resume();
+      audioRef.current.play().then(() => {
         setIsPlaying(true);
         setShowNotification(false);
-
-        const estimatedDurationMs = 22000;
-        const startProgress = progress;
-        let startTime = Date.now();
-
-        synthTimerRef.current = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          const addedProgress = (elapsed / estimatedDurationMs) * 100;
-          const p = Math.min(startProgress + addedProgress, 99);
-          setProgress(p);
-        }, 100);
-
-      } else {
-        // Start fresh speech utterance
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(introText);
-        utterance.rate = 1.0;
-
-        const voices = window.speechSynthesis.getVoices();
-        const naturalVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')));
-        if (naturalVoice) utterance.voice = naturalVoice;
-
-        const estimatedDurationMs = 22000;
-        let startTime = Date.now();
-
-        synthTimerRef.current = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          const p = Math.min((elapsed / estimatedDurationMs) * 100, 99);
-          setProgress(p);
-        }, 100);
-
-        utterance.onend = () => {
-          if (synthTimerRef.current) clearInterval(synthTimerRef.current);
-          setIsPlaying(false);
-          setProgress(100);
-          setTimeout(() => setProgress(0), 500);
-        };
-
-        utterance.onerror = () => {
-          if (synthTimerRef.current) clearInterval(synthTimerRef.current);
-          setIsPlaying(false);
-          setProgress(0);
-        };
-
-        window.speechSynthesis.speak(utterance);
-        setIsPlaying(true);
-        setShowNotification(false);
-      }
+      }).catch(err => {
+        console.error("Audio playback error:", err);
+      });
     }
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-40">
       
-      {/* Tooltip Notification (Absolutely positioned to prevent layout shift) */}
+      {/* Tooltip Notification */}
       <AnimatePresence>
         {showNotification && !isPlaying && (
           <motion.div 
@@ -167,12 +80,10 @@ export default function AudioIntroduction({ personal }) {
             </button>
             <div className="flex items-center gap-1.5 font-bold text-sky-400 pr-4">
               <Sparkles size={14} className="text-amber-400 shrink-0 animate-spin" />
-              <span className="truncate">{hasCustomAudio ? "Listen to Ravi's Voice!" : "Listen to Audio Intro!"}</span>
+              <span className="truncate">Listen to Ravi's Voice!</span>
             </div>
             <p className="text-[11px] text-gray-300 leading-snug">
-              {hasCustomAudio 
-                ? "Click to hear Ravi's personal voice recording." 
-                : "Click to hear background, core skills, and job availability."}
+              Click to hear Ravi's personal voice introduction.
             </p>
           </motion.div>
         )}
@@ -208,7 +119,7 @@ export default function AudioIntroduction({ personal }) {
               ? 'bg-[#111827] text-white border-sky-500/60 shadow-sky-500/30 min-w-[140px]'
               : 'bg-[#111827]/90 hover:bg-[#111827] text-sky-300 border-sky-500/40 shadow-sky-500/20 backdrop-blur-xl min-w-[130px]'
           }`}
-          title={hasCustomAudio ? "Ravi's Personal Voice Recording" : "AI Voice Introduction"}
+          title="Ravi's Personal Voice Recording"
         >
           {/* Animated Background Progress Fill Bar */}
           <div 
@@ -237,7 +148,7 @@ export default function AudioIntroduction({ personal }) {
                 ? `${Math.floor(progress)}%` 
                 : progress > 0 
                   ? `Resume (${Math.floor(progress)}%)`
-                  : hasCustomAudio ? "🎙️ Ravi's Voice" : '🎙️ Audio Intro'}
+                  : "🎙️ Ravi's Voice"}
             </span>
           </div>
 

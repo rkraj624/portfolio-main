@@ -22,7 +22,7 @@ A modern, sleek, and fully customizable portfolio application designed specifica
 - ⚡ **High Performance & Responsive**: Powered by React 18 & Vite with zero layout cumulative shift and responsive typography.
 - 🎭 **Scroll-Driven Animations**: Smooth scroll-triggered reveal animations powered by **Framer Motion**.
 - 🛠️ **Visual Skill Icons**: Categorized technology matrix featuring custom icons (☕ Java, 🍃 Spring Boot, ☸️ Kubernetes, 🐳 Docker, 🚀 Kafka, ⚡ Redis, 🐬 MySQL).
-- 📱 **Dynamic Projects Showcase**: Separate grids for enterprise client projects (*Coca-Cola Mexico Bepensa*, *Mars Sampling*) and open-source personal repositories (*SpringShield*).
+- 📱 **Dynamic Projects Showcase**: Separate grids for enterprise client projects (*Coca-Cola Mexico Bepensa*, *Mars Sampling*) and open-source personal repositories (*SpringShield*, *Developer Portfolio & Live CMS*).
 - 📥 **Interactive Actions**: One-click email copying, resume downloading with celebration confetti (`canvas-confetti`), and social links.
 
 ---

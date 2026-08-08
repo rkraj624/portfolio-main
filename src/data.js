@@ -163,6 +163,23 @@ export const PORTFOLIO_DATA = {
   ],
   "personalProjects": [
     {
+      "name": "Developer Portfolio & Live CMS",
+      "tagline": "Full-Stack Portfolio Application with Embedded Disk-Persisted CMS",
+      "github": "https://github.com/rkraj624/portfolio-main",
+      "tech": [
+        "React 18",
+        "Vite",
+        "Tailwind CSS",
+        "Framer Motion",
+        "Node.js"
+      ],
+      "features": [
+        "Architected a responsive single-page web app with smooth, scroll-driven animations and custom glassmorphism design system.",
+        "Built an integrated client-side CMS dashboard allowing real-time content management and live preview.",
+        "Implemented custom Vite server middleware using Node.js FS API for direct disk state persistence to source configuration files."
+      ]
+    },
+    {
       "name": "SpringShield",
       "tagline": "Production-Grade JWT Authentication & Authorization System",
       "tech": [
@@ -177,23 +194,6 @@ export const PORTFOLIO_DATA = {
         "Implemented RBAC and method-level security protecting 10+ REST endpoints.",
         "Full refresh token lifecycle (issuance, rotation, revocation), reducing repeated login requests by 30%.",
         "Engineered concurrent session handling with consistent token validation across simultaneous user sessions."
-      ]
-    },
-    {
-      "name": "Portfolio",
-      "tagline": "Customizable Portfolio Application ",
-      "github": "https://github.com/rkraj-portfolio",
-      "tech": [
-        "React",
-        "JavaScript",
-        "Node",
-        "Tailwind CSS",
-        "FramerMotion"
-      ],
-      "features": [
-        "A modern, sleek, and fully customizable portfolio application designed specifically for Senior Backend Engineers with a built-in live admin dashboard and direct disk file persistence.",
-        "",
-        "The application features a hidden, full-blown admin dashboard accessible, that allows live editing of all portfolio contents without opening an editor!"
       ]
     }
   ],
