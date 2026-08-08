@@ -194,11 +194,11 @@ export const PORTFOLIO_DATA = {
         "JPA"
       ],
       "features": [
-        "Engineered a full-duplex WebSocket messaging server supporting sub-millisecond end-to-end event propagation across concurrent client sessions.",
-        "Integrated Redis Pub/Sub as a distributed message broker to sync WebSocket sessions across multi-node microservice clusters.",
-        "Designed persistent message storage schemas with MySQL and Spring Data JPA with efficient pagination."
+        "Built a multi-mode real-time chat platform (1-on-1 DMs, group rooms, public channels) using Spring Boot, STOMP WebSockets, and SockJS.",
+        "Implemented production-grade persistence and scaling with MySQL JPA database storage and Redis Pub/Sub cross-node synchronization.",
+        "Engineered a zero-leak, server-side profanity filter using an O(L) Trie data structure inside a STOMP ChannelInterceptor to mask abusive words at socket ingress."
       ],
-      "learning": "Mastered horizontal scaling of stateful WebSocket connections using Redis Pub/Sub backplanes and managing thread synchronization across distributed nodes."
+      "learning": "Engineered a scalable STOMP WebSocket architecture featuring O(L) Trie-based socket ingress profanity masking, Redis cross-node Pub/Sub synchronization, and MySQL JPA   persistence."
     },
     {
       "name": "Products Catalogue Service",
