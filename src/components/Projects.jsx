@@ -82,7 +82,7 @@ export default function Projects({ keyProjects, personalProjects }) {
             variants={fadeInUp}
             whileHover={{ translateY: -6 }}
             key={idx} 
-            className="p-6 rounded-2xl bg-[#111827]/80 border border-white/10 flex flex-col justify-between hover:border-sky-500/40 transition-all duration-300 shadow-xl backdrop-blur-md"
+            className="p-6 rounded-2xl bg-[#111827]/70 border border-white/10 flex flex-col justify-between hover:border-sky-500/40 transition-all duration-300 shadow-xl"
           >
             <div>
               <div className="text-xs font-mono text-sky-400 mb-1">{project.client}</div>
@@ -184,7 +184,7 @@ export default function Projects({ keyProjects, personalProjects }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
                   transition={{ duration: 0.35, ease: "easeInOut" }}
-                  className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/65 to-sky-950/65 border border-indigo-500/40 shadow-2xl relative backdrop-blur-md"
+                  className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/40 to-sky-950/40 border border-indigo-500/30 shadow-2xl relative"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
