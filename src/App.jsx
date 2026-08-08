@@ -21,11 +21,8 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   
-  // LocalStorage state persistence for live editing
-  const [portfolioData, setPortfolioData] = useState(() => {
-    const saved = localStorage.getItem('ravi_portfolio_data');
-    return saved ? JSON.parse(saved) : PORTFOLIO_DATA;
-  });
+  // Single source of truth from src/data.js
+  const [portfolioData, setPortfolioData] = useState(PORTFOLIO_DATA);
 
   const { personal, summary, skills, experience, keyProjects, personalProjects, achievements, education } = portfolioData;
 
@@ -49,7 +46,6 @@ export default function App() {
 
   const handleUpdateData = (newData) => {
     setPortfolioData(newData);
-    localStorage.setItem('ravi_portfolio_data', JSON.stringify(newData));
   };
 
   const navigateTo = (path) => {
