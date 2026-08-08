@@ -30,7 +30,7 @@ export default function Experience({ experience }) {
             viewport={{ once: true, amount: 0.15 }} 
             variants={fadeInUp}
             key={idx} 
-            className="p-6 sm:p-8 rounded-2xl bg-[#111827]/60 border border-white/10 relative overflow-hidden group hover:border-indigo-500/40 transition duration-300"
+            className="p-6 sm:p-8 rounded-2xl bg-[#111827]/75 border border-white/10 relative overflow-hidden group hover:border-indigo-500/40 transition duration-300 backdrop-blur-md"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-full pointer-events-none" />
             

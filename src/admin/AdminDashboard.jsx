@@ -881,7 +881,7 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-3">
                       <div>
                         <label className="text-xs text-gray-400 block mb-1">Project Name</label>
                         <input 
@@ -899,13 +899,27 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                         <label className="text-xs text-gray-400 block mb-1">GitHub Link</label>
                         <input 
                           type="text" 
-                          value={pProj.github}
+                          value={pProj.github || ''}
                           onChange={(e) => {
                             const updated = [...formData.personalProjects];
                             updated[idx].github = e.target.value;
                             setFormData(prev => ({ ...prev, personalProjects: updated }));
                           }}
                           className="w-full bg-[#111827] border border-white/10 rounded-lg p-2 text-xs text-sky-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-emerald-400 font-semibold block mb-1">Live Demo URL</label>
+                        <input 
+                          type="text" 
+                          value={pProj.demo || ''}
+                          placeholder="https://..."
+                          onChange={(e) => {
+                            const updated = [...formData.personalProjects];
+                            updated[idx].demo = e.target.value;
+                            setFormData(prev => ({ ...prev, personalProjects: updated }));
+                          }}
+                          className="w-full bg-[#111827] border border-emerald-500/30 rounded-lg p-2 text-xs text-emerald-300 focus:border-emerald-400 outline-none"
                         />
                       </div>
                     </div>
@@ -948,7 +962,22 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                           updated[idx].features = e.target.value.split('\n');
                           setFormData(prev => ({ ...prev, personalProjects: updated }));
                         }}
-                        className="w-full bg-[#111827] border border-white/10 rounded-lg p-2 text-xs leading-relaxed"
+                        className="w-full bg-[#111827] border border-white/10 rounded-lg p-2 text-xs leading-relaxed mb-3"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-sky-400 font-semibold block mb-1">⚡ Key Engineering Takeaways & Learnings</label>
+                      <textarea 
+                        rows={2}
+                        value={pProj.learning || ''}
+                        onChange={(e) => {
+                          const updated = [...formData.personalProjects];
+                          updated[idx].learning = e.target.value;
+                          setFormData(prev => ({ ...prev, personalProjects: updated }));
+                        }}
+                        placeholder="Describe key architectural takeaways & learnings..."
+                        className="w-full bg-[#111827] border border-sky-500/30 rounded-lg p-2 text-xs text-sky-200 leading-relaxed outline-none focus:border-sky-400"
                       />
                     </div>
                   </div>

@@ -30,7 +30,7 @@ export default function Achievements({ achievements, education }) {
               <motion.div 
                 whileHover={{ x: 6 }}
                 key={idx} 
-                className="p-5 rounded-xl bg-[#111827]/60 border border-white/10 flex items-start gap-4 transition duration-300"
+                className="p-5 rounded-xl bg-[#111827]/75 border border-white/10 flex items-start gap-4 transition duration-300 backdrop-blur-md"
               >
                 <Sparkles size={20} className="text-amber-400 shrink-0 mt-1" />
                 <div>
@@ -63,7 +63,7 @@ export default function Achievements({ achievements, education }) {
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#111827]/60 border border-white/10 relative hover:border-emerald-500/30 transition duration-300">
+          <div className="p-6 rounded-2xl bg-[#111827]/75 border border-white/10 relative hover:border-emerald-500/30 transition duration-300 backdrop-blur-md">
             <h3 className="text-lg font-bold text-white">{education.institution}</h3>
             <p className="text-sm text-sky-400 font-medium">{education.degree}</p>
             <p className="text-xs text-gray-400 mt-1">{education.location} • {education.period}</p>

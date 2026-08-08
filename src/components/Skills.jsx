@@ -43,7 +43,7 @@ export default function Skills({ skills }) {
             variants={fadeInUp}
             whileHover={{ scale: 1.02 }}
             key={idx} 
-            className="p-6 rounded-2xl bg-[#111827]/60 border border-white/10 hover:border-purple-500/40 transition-all duration-300 shadow-xl"
+            className="p-6 rounded-2xl bg-[#111827]/75 border border-white/10 hover:border-purple-500/40 transition-all duration-300 shadow-xl backdrop-blur-md"
           >
             <h3 className="text-base font-semibold text-white mb-4 pb-2 border-b border-white/5 flex items-center justify-between">
               <span>{group.category}</span>

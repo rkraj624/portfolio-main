@@ -1,23 +1,36 @@
 :root {
   --bg-primary: #090d16;
-  --bg-surface: #111827;
-  --bg-surface-hover: #1f293d;
-  --bg-glass: rgba(17, 24, 39, 0.75);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-bright: rgba(99, 102, 241, 0.4);
+  --bg-surface: rgba(17, 24, 39, 0.8);
+  --bg-surface-hover: rgba(31, 41, 61, 0.9);
+  --bg-glass: rgba(17, 24, 39, 0.85);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-bright: rgba(99, 102, 241, 0.5);
   
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
   
   --accent-cyan: #38bdf8;
-  --accent-indigo: #6366f1;
-  --accent-purple: #a855f7;
-  --accent-emerald: #10b981;
-  --accent-amber: #f59e0b;
+  --accent-indigo: #818cf8;
+  --accent-purple: #c084fc;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
   
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-code: 'JetBrains Mono', monospace;
+}
+
+/* Global text contrast boost overrides */
+.text-gray-400 {
+  color: #d1d5db !important; /* Boosts dim text-gray-400 (#9ca3af) to crisp text-gray-300 (#d1d5db) */
+}
+
+.text-gray-300 {
+  color: #e5e7eb !important; /* Boosts text-gray-300 (#d1d5db) to text-gray-200 (#e5e7eb) */
+}
+
+.text-gray-500 {
+  color: #9ca3af !important; /* Boosts dark text-gray-500 (#6b7280) to legible text-gray-400 (#9ca3af) */
 }
 
 * {

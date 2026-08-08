@@ -163,9 +163,85 @@ export const PORTFOLIO_DATA = {
   ],
   "personalProjects": [
     {
+      "name": "HLD & SQL Visualizer Engine",
+      "tagline": "Interactive Distributed Architecture Simulator & Stateful SQL Practice Studio",
+      "github": "https://github.com/rkraj624/HLD-Visualizer",
+      "demo": "https://hld-visualizer.vercel.app/",
+      "tech": [
+        "React 19",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS",
+        "Framer Motion"
+      ],
+      "features": [
+        "Architected an interactive drag-and-drop HLD topology canvas supporting multi-tier pipeline visualization (Client -> Gateway -> Microservice -> DB).",
+        "Engineered a stateful in-memory SQL execution engine with real-time query parsing (JOIN, GROUP BY, HAVING) and 50+ interview challenges.",
+        "Built visual benchmarkers for 5 core rate-limiting algorithms (Token Bucket, Leaky Bucket, Sliding Window Log/Counter) under traffic spike/DDoS scenarios."
+      ],
+      "learning": "Deepened expertise in frontend state trees for canvas graph rendering, algorithm complexity tradeoffs under real-time simulation, and building AST-like SQL query parsers."
+    },
+    {
+      "name": "Real-Time Chat Engine",
+      "tagline": "High-Throughput Distributed WebSocket & Pub/Sub Messaging Service",
+      "github": "https://github.com/rkraj624/chat-message-app",
+      "tech": [
+        "Java 17",
+        "Spring Boot",
+        "WebSocket (STOMP)",
+        "Redis Pub/Sub",
+        "MySQL",
+        "JPA"
+      ],
+      "features": [
+        "Engineered a full-duplex WebSocket messaging server supporting sub-millisecond end-to-end event propagation across concurrent client sessions.",
+        "Integrated Redis Pub/Sub as a distributed message broker to sync WebSocket sessions across multi-node microservice clusters.",
+        "Designed persistent message storage schemas with MySQL and Spring Data JPA with efficient pagination."
+      ],
+      "learning": "Mastered horizontal scaling of stateful WebSocket connections using Redis Pub/Sub backplanes and managing thread synchronization across distributed nodes."
+    },
+    {
+      "name": "Products Catalogue Service",
+      "tagline": "High-Scale E-Commerce Backend with Primary/Replica DB Routing & Rate Limiting",
+      "github": "https://github.com/rkraj624/products",
+      "tech": [
+        "Java 17",
+        "Spring Boot",
+        "MySQL Read-Replicas",
+        "LazyConnectionProxy",
+        "Token Bucket",
+        "BCrypt"
+      ],
+      "features": [
+        "Architected primary and read-replica database routing using Spring's AbstractRoutingDataSource and LazyConnectionDataSourceProxy.",
+        "Implemented database-backed RBAC with stateless Basic Auth and optimistic locking for high-concurrency inventory updates.",
+        "Built configurable in-memory rate limiters (Token Bucket, Sliding Window) for API endpoint abuse protection."
+      ],
+      "learning": "Gained practical experience with Spring dynamic routing datasources, handling eventual consistency in read replicas, and preventing race conditions with optimistic locking."
+    },
+    {
+      "name": "SpringShield",
+      "tagline": "Production-Grade JWT Authentication & Authorization System",
+      "github": "https://github.com/rkraj-portfolio/SpringShield",
+      "tech": [
+        "Spring Boot",
+        "Spring Security",
+        "JPA",
+        "MySQL",
+        "Maven"
+      ],
+      "features": [
+        "Implemented RBAC and method-level security protecting 10+ REST endpoints.",
+        "Full refresh token lifecycle (issuance, rotation, revocation), reducing repeated login requests by 30%.",
+        "Engineered concurrent session handling with consistent token validation across simultaneous user sessions."
+      ],
+      "learning": "Acquired detailed understanding of custom Spring Security filter chains, token rotation security patterns, and mitigating token theft via revocation stores."
+    },
+    {
       "name": "Developer Portfolio & Live CMS",
       "tagline": "Full-Stack Portfolio Application with Embedded Disk-Persisted CMS",
       "github": "https://github.com/rkraj624/portfolio-main",
+      "isCurrentApp": true,
       "tech": [
         "React 18",
         "Vite",
@@ -177,24 +253,8 @@ export const PORTFOLIO_DATA = {
         "Architected a responsive single-page web app with smooth, scroll-driven animations and custom glassmorphism design system.",
         "Built an integrated client-side CMS dashboard allowing real-time content management and live preview.",
         "Implemented custom Vite server middleware using Node.js FS API for direct disk state persistence to source configuration files."
-      ]
-    },
-    {
-      "name": "SpringShield",
-      "tagline": "Production-Grade JWT Authentication & Authorization System",
-      "tech": [
-        "Spring Boot",
-        "Spring Security",
-        "JPA",
-        "MySQL",
-        "Maven"
       ],
-      "github": "https://github.com/rkraj-portfolio/SpringShield",
-      "features": [
-        "Implemented RBAC and method-level security protecting 10+ REST endpoints.",
-        "Full refresh token lifecycle (issuance, rotation, revocation), reducing repeated login requests by 30%.",
-        "Engineered concurrent session handling with consistent token validation across simultaneous user sessions."
-      ]
+      "learning": "Learned to build custom Vite dev server plugins, leverage Node.js filesystem APIs for developer tooling, and manage seamless single-page application state."
     }
   ],
   "achievements": [
