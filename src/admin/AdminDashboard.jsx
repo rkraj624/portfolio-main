@@ -229,7 +229,7 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
       tech: ['Java', 'Spring Boot', 'React'],
       features: ['Feature 1: Scalable authentication and session lifecycle.']
     };
-    setFormData(prev => ({ ...prev, personalProjects: [...prev.personalProjects, newPersonalProj] }));
+    setFormData(prev => ({ ...prev, personalProjects: [newPersonalProj, ...prev.personalProjects] }));
   };
 
   const handleRemovePersonalProject = (pProjIdx) => {
