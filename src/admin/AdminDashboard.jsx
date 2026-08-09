@@ -15,7 +15,10 @@ import {
   Layers,
   Sparkles,
   Eye,
-  EyeOff
+  EyeOff,
+  BarChart2,
+  Headphones,
+  Users
 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data';
 
@@ -24,8 +27,16 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
     ...data,
     customSections: data.customSections || []
   });
-  const [activeTab, setActiveTab] = useState('personal');
+  const [activeTab, setActiveTab] = useState('analytics');
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [metrics, setMetrics] = useState({ pageViews: 0, audioListens: 0, audioCompletions: 0 });
+
+  React.useEffect(() => {
+    fetch('/api/track-event')
+      .then(res => res.json())
+      .then(d => { if (d.metrics) setMetrics(d.metrics); })
+      .catch(() => {});
+  }, []);
 
   const [pushToGit, setPushToGit] = useState(true);
   const [resumePdfBase64, setResumePdfBase64] = useState(null);
@@ -442,6 +453,12 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
         {/* Navigation Sidebar */}
         <div className="md:col-span-3 space-y-2">
           <button 
+            onClick={() => setActiveTab('analytics')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition ${activeTab === 'analytics' ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-lg shadow-sky-500/30' : 'bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/20'}`}
+          >
+            <BarChart2 size={16} /> Traffic & Audio Analytics
+          </button>
+          <button 
             onClick={() => setActiveTab('personal')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition ${activeTab === 'personal' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'bg-white/5 hover:bg-white/10 text-gray-300'}`}
           >
@@ -487,6 +504,89 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
 
         {/* Content Form Area */}
         <div className="md:col-span-9 bg-[#111827] border border-white/10 rounded-2xl p-6 shadow-2xl">
+          
+          {/* ANALYTICS TAB */}
+          {activeTab === 'analytics' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                  <h2 className="text-base font-bold text-white flex items-center gap-2">
+                    <BarChart2 className="text-sky-400" size={18} /> Portfolio Traffic & Engagement Metrics
+                  </h2>
+                  <p className="text-xs text-gray-400">Live stats of visitor traffic and audio intro plays</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-[10px] font-mono px-3 py-1 rounded-full border ${
+                    metrics.isKvConfigured 
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                      : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                  }`}>
+                    {metrics.isKvConfigured ? '⚡ Redis KV Connected' : '📁 Local Storage Mode'}
+                  </span>
+                  <span className="text-[10px] font-mono bg-sky-500/10 text-sky-400 px-3 py-1 rounded-full border border-sky-500/20 animate-pulse">
+                    ● Realtime
+                  </span>
+                </div>
+              </div>
+
+              {/* Metric Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-[#090d16] border border-sky-500/30 rounded-2xl p-5 space-y-2 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 text-sky-400 group-hover:scale-110 transition">
+                    <Users size={64} />
+                  </div>
+                  <div className="flex items-center gap-2 text-sky-400 text-xs font-semibold">
+                    <Users size={16} /> Total Page Views
+                  </div>
+                  <div className="text-3xl font-black font-mono text-white">
+                    {metrics.pageViews || 0}
+                  </div>
+                  <p className="text-[11px] text-gray-400">Total portfolio impressions recorded</p>
+                </div>
+
+                <div className="bg-[#090d16] border border-indigo-500/30 rounded-2xl p-5 space-y-2 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 text-indigo-400 group-hover:scale-110 transition">
+                    <Headphones size={64} />
+                  </div>
+                  <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold">
+                    <Headphones size={16} /> Audio Intro Listens
+                  </div>
+                  <div className="text-3xl font-black font-mono text-white">
+                    {metrics.audioListens || 0}
+                  </div>
+                  <p className="text-[11px] text-gray-400">Visitors who played your voice intro</p>
+                </div>
+
+                <div className="bg-[#090d16] border border-emerald-500/30 rounded-2xl p-5 space-y-2 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 text-emerald-400 group-hover:scale-110 transition">
+                    <Sparkles size={64} />
+                  </div>
+                  <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+                    <Sparkles size={16} /> Full Audio Completions
+                  </div>
+                  <div className="text-3xl font-black font-mono text-white">
+                    {metrics.audioCompletions || 0}
+                  </div>
+                  <p className="text-[11px] text-gray-400">Visitors who listened to 100% of recording</p>
+                </div>
+              </div>
+
+              {/* Conversion Insight Card */}
+              <div className="p-4 bg-gradient-to-r from-sky-950/40 via-indigo-950/40 to-purple-950/40 border border-sky-500/20 rounded-2xl space-y-2">
+                <h3 className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
+                  <Sparkles size={14} /> Engagement Rate Breakdown
+                </h3>
+                <p className="text-xs text-gray-300">
+                  <strong className="text-white font-mono">
+                    {metrics.pageViews > 0 ? ((metrics.audioListens / metrics.pageViews) * 100).toFixed(1) : 0}%
+                  </strong> of visitors click to hear your audio introduction, and{' '}
+                  <strong className="text-white font-mono">
+                    {metrics.audioListens > 0 ? ((metrics.audioCompletions / metrics.audioListens) * 100).toFixed(1) : 0}%
+                  </strong> of those listeners listen all the way to the end!
+                </p>
+              </div>
+            </div>
+          )}
           
           {/* PERSONAL TAB */}
           {activeTab === 'personal' && (

@@ -24,6 +24,15 @@ export default function AudioIntroduction() {
       setIsPlaying(false);
       setProgress(0);
       if (audioRef.current) audioRef.current.currentTime = 0;
+      
+      // Track full audio completion metric
+      try {
+        fetch('/api/track-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'audio_completion' })
+        }).catch(() => {});
+      } catch (e) {}
     };
 
     return () => {
@@ -54,6 +63,15 @@ export default function AudioIntroduction() {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         setShowNotification(false);
+
+        // Track audio listen metric
+        try {
+          fetch('/api/track-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'audio_listen' })
+          }).catch(() => {});
+        } catch (e) {}
       }).catch(err => {
         console.error("Audio playback error:", err);
       });

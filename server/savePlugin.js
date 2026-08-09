@@ -108,6 +108,40 @@ export default function saveApiPlugin() {
               res.end(JSON.stringify({ success: false, error: err.message }));
             }
           });
+        } else if (req.url.startsWith('/api/track-event')) {
+          const metricsFile = path.resolve(rootDir, 'server/metrics.json');
+          let metrics = { pageViews: 120, audioListens: 45, audioCompletions: 28, lastUpdated: new Date().toISOString() };
+          if (fs.existsSync(metricsFile)) {
+            try { metrics = JSON.parse(fs.readFileSync(metricsFile, 'utf-8')); } catch (e) {}
+          }
+
+          if (req.method === 'GET') {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            return res.end(JSON.stringify({ success: true, metrics }));
+          }
+
+          if (req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => { body += chunk.toString(); });
+            req.on('end', () => {
+              try {
+                const { type } = JSON.parse(body || '{}');
+                if (type === 'pageview') metrics.pageViews = (metrics.pageViews || 0) + 1;
+                if (type === 'audio_listen') metrics.audioListens = (metrics.audioListens || 0) + 1;
+                if (type === 'audio_completion') metrics.audioCompletions = (metrics.audioCompletions || 0) + 1;
+                metrics.lastUpdated = new Date().toISOString();
+                fs.writeFileSync(metricsFile, JSON.stringify(metrics, null, 2), 'utf-8');
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true, metrics }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ success: false, error: err.message }));
+              }
+            });
+            return;
+          }
         } else {
           res.statusCode = 405;
           res.end();

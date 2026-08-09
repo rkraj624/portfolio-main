@@ -14,6 +14,8 @@ import TechLoader from './components/TechLoader';
 import AudioIntroduction from './components/AudioIntroduction';
 
 import { PORTFOLIO_DATA } from './data';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './index.css';
 
 export default function App() {
@@ -38,6 +40,15 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('popstate', handlePopState);
     
+    // Track pageview metric
+    try {
+      fetch('/api/track-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'pageview' })
+      }).catch(() => {});
+    } catch (e) {}
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('popstate', handlePopState);
@@ -102,6 +113,10 @@ export default function App() {
 
         <Footer personal={personal} />
       </motion.div>
+
+      {/* Vercel Web Analytics & Speed Insights */}
+      <Analytics />
+      <SpeedInsights />
 
     </div>
   );
