@@ -18,7 +18,8 @@ import {
   EyeOff,
   BarChart2,
   Headphones,
-  Users
+  Users,
+  MessageSquare
 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data';
 
@@ -30,11 +31,17 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
   const [activeTab, setActiveTab] = useState('analytics');
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [metrics, setMetrics] = useState({ pageViews: 0, audioListens: 0, audioCompletions: 0 });
+  const [comments, setComments] = useState([]);
 
   React.useEffect(() => {
     fetch('/api/track-event')
       .then(res => res.json())
       .then(d => { if (d.metrics) setMetrics(d.metrics); })
+      .catch(() => {});
+
+    fetch('/api/comments')
+      .then(res => res.json())
+      .then(d => { if (d.comments) setComments(d.comments); })
       .catch(() => {});
   }, []);
 
@@ -43,13 +50,66 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
   const [pdfFileName, setPdfFileName] = useState('');
   const [avatarBase64, setAvatarBase64] = useState(null);
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [adminPassword, setAdminPassword] = useState('');
+  // Authentication Lock State (Persists in sessionStorage)
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    try {
+      return typeof window !== 'undefined' && window.sessionStorage.getItem('admin_authenticated') === 'true';
+    } catch (e) {
+      return false;
+    }
+  });
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isVerifyingLogin, setIsVerifyingLogin] = useState(false);
 
-  // Password Modal & Status Notification States
+  const [adminPassword, setAdminPassword] = useState('');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [notification, setNotification] = useState(null); // { type: 'success' | 'error', message: string }
+  const [notification, setNotification] = useState(null);
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    if (!loginPassword.trim()) {
+      setLoginError('Please enter the Admin Password.');
+      return;
+    }
+
+    setIsVerifyingLogin(true);
+    setLoginError('');
+
+    try {
+      // Verify against bcrypt endpoint /api/verify-password
+      const res = await fetch('/api/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: loginPassword })
+      });
+      const result = await res.json();
+
+      if (!res.ok || !result.authenticated) {
+        setLoginError('🔒 Incorrect Admin Password! Access Denied.');
+        setIsVerifyingLogin(false);
+        return;
+      }
+
+      // Granted bcrypt authenticated access
+      sessionStorage.setItem('admin_authenticated', 'true');
+      setAdminPassword(loginPassword);
+      setIsAuthenticated(true);
+      setIsVerifyingLogin(false);
+    } catch (err) {
+      console.error('Bcrypt Login verification error:', err);
+      setLoginError('Server connection error. Please try again.');
+      setIsVerifyingLogin(false);
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_authenticated');
+    setIsAuthenticated(false);
+    onClose();
+  };
 
   const handlePersonalChange = (e) => {
     const { name, value } = e.target;
@@ -306,26 +366,98 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
     downloadAnchor.remove();
   };
 
+  // Render Lock Screen if not authenticated via Bcrypt Password
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[#090d16] flex items-center justify-center p-4 font-sans">
+        <div className="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="bg-[#111827] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6 relative z-10">
+          <div className="text-center space-y-2">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400 mb-2">
+              <span className="text-2xl">🔒</span>
+            </div>
+            <h2 className="text-xl font-bold text-white tracking-tight">Admin Dashboard Protected</h2>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Enter your password to access analytics & content management. Password verification is encrypted & processed via <code className="text-sky-400 font-mono">bcrypt</code>.
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-3 bg-rose-950/80 border border-rose-500/40 rounded-xl text-rose-200 text-xs text-center font-medium">
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleLoginSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-300 mb-1.5">Admin Password</label>
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  autoFocus
+                  placeholder="Enter admin password..."
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  className="w-full bg-[#090d16] border border-white/10 rounded-xl pl-4 pr-10 py-3 text-xs text-white placeholder-gray-500 focus:border-indigo-500 outline-none font-mono"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 p-1 rounded-lg transition"
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button 
+                type="button"
+                onClick={onClose}
+                className="w-1/3 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-gray-300 transition"
+              >
+                Back to Site
+              </button>
+              <button 
+                type="submit"
+                disabled={isVerifyingLogin}
+                className="w-2/3 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition active:scale-95 disabled:opacity-50"
+              >
+                {isVerifyingLogin ? 'Verifying Bcrypt...' : 'Unlock Dashboard 🔓'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 bg-[#090d16] overflow-y-auto text-gray-100 flex flex-col font-sans">
       
       {/* Admin Top Header */}
-      <div className="bg-[#111827] border-b border-white/10 px-6 py-4 sticky top-0 z-20 flex items-center justify-between shadow-xl">
-        <div className="flex items-center gap-4">
+      <div className="bg-[#111827] border-b border-white/10 px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+        <div className="flex items-center gap-2 sm:gap-4">
           <button 
             onClick={onClose}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono transition text-gray-300"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono transition text-gray-300"
+            title="Back to Live Portfolio"
           >
-            <ArrowLeft size={16} /> Back to Live Portfolio
+            <ArrowLeft size={16} /> 
+            <span className="hidden sm:inline">Back to Live Portfolio</span>
+            <span className="sm:hidden">Portfolio</span>
           </button>
-          <div className="h-5 w-px bg-white/10" />
-          <h1 className="text-lg font-bold flex items-center gap-2">
-            <span>⚙️ Portfolio Admin Dashboard</span>
+          <div className="h-5 w-px bg-white/10 hidden sm:block" />
+          <h1 className="text-sm sm:text-lg font-bold flex items-center gap-2">
+            <span>⚙️ <span className="hidden xs:inline">Admin Dashboard</span></span>
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
-          <label className="flex items-center gap-1.5 text-xs text-sky-400 font-mono bg-sky-500/10 px-2.5 py-1.5 rounded-lg border border-sky-500/20 cursor-pointer select-none">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <label className="flex items-center gap-1 text-[11px] sm:text-xs text-sky-400 font-mono bg-sky-500/10 px-2 sm:px-2.5 py-1.5 rounded-lg border border-sky-500/20 cursor-pointer select-none">
             <input 
               type="checkbox" 
               checked={pushToGit} 
@@ -334,25 +466,40 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
             />
             <span>Auto-Push</span>
           </label>
+          
           <button 
             onClick={exportJSON}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium border border-white/10 transition"
+            className="flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[11px] sm:text-xs font-medium border border-white/10 transition"
             title="Download JSON Config"
           >
-            <Download size={14} /> Export JSON
+            <Download size={14} /> 
+            <span className="hidden md:inline">Export JSON</span>
           </button>
+          
           <button 
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-medium border border-rose-500/20 transition"
+            className="flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[11px] sm:text-xs font-medium border border-rose-500/20 transition"
+            title="Reset to Defaults"
           >
-            <RotateCcw size={14} /> Reset
+            <RotateCcw size={14} /> 
+            <span className="hidden md:inline">Reset</span>
           </button>
+          
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-gray-500/10 hover:bg-gray-500/20 text-gray-300 text-[11px] sm:text-xs font-medium border border-gray-500/20 transition"
+            title="Lock Dashboard & Logout"
+          >
+            <span>🔒</span> 
+            <span className="hidden lg:inline">Logout</span>
+          </button>
+          
           <button 
             onClick={openSaveModal}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25 transition active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-[11px] sm:text-xs shadow-lg shadow-indigo-500/25 transition active:scale-95"
           >
             {savedSuccess ? <Check size={16} className="text-emerald-300" /> : <Save size={16} />}
-            <span>{savedSuccess ? "Saved Live!" : "Apply Changes"}</span>
+            <span>{savedSuccess ? "Saved!" : "Apply"}</span>
           </button>
         </div>
       </div>
@@ -457,6 +604,19 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition ${activeTab === 'analytics' ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-lg shadow-sky-500/30' : 'bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/20'}`}
           >
             <BarChart2 size={16} /> Traffic & Audio Analytics
+          </button>
+          <button 
+            onClick={() => setActiveTab('comments')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-semibold transition ${activeTab === 'comments' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'bg-white/5 hover:bg-white/10 text-gray-300'}`}
+          >
+            <div className="flex items-center gap-3">
+              <MessageSquare size={16} /> Visitor Messages
+            </div>
+            {comments.length > 0 && (
+              <span className="bg-sky-500 text-white font-mono text-[10px] px-2 py-0.5 rounded-full font-bold">
+                {comments.length}
+              </span>
+            )}
           </button>
           <button 
             onClick={() => setActiveTab('personal')}
@@ -585,6 +745,67 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                   </strong> of those listeners listen all the way to the end!
                 </p>
               </div>
+            </div>
+          )}
+
+          {/* COMMENTS & FEEDBACK TAB */}
+          {activeTab === 'comments' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                  <h2 className="text-base font-bold text-white flex items-center gap-2">
+                    <MessageSquare className="text-sky-400" size={18} /> Visitor Messages & Connection Requests ({comments.length})
+                  </h2>
+                  <p className="text-xs text-gray-400">Stored in <code className="text-sky-400 font-mono">src/comments.js</code> & persistent storage</p>
+                </div>
+              </div>
+
+              {comments.length === 0 ? (
+                <div className="text-center py-12 bg-[#090d16] border border-white/10 rounded-2xl space-y-2">
+                  <p className="text-xs text-gray-400">No visitor messages or feedback submitted yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {comments.map((comment) => (
+                    <div key={comment.id} className="p-4 bg-[#090d16] border border-white/10 rounded-2xl space-y-2 relative group hover:border-sky-500/30 transition">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold text-white">{comment.name}</span>
+                          {comment.email && (
+                            <a href={`mailto:${comment.email}`} className="text-[11px] text-sky-400 font-mono hover:underline">
+                              &lt;{comment.email}&gt;
+                            </a>
+                          )}
+                          {comment.linkedin && (
+                            <a href={comment.linkedin} target="_blank" rel="noreferrer" className="text-[10px] bg-sky-500/10 text-sky-300 px-2 py-0.5 rounded-md border border-sky-500/20 font-mono hover:underline flex items-center gap-1">
+                              <span>in</span> LinkedIn Profile
+                            </a>
+                          )}
+                        </div>
+                        <span className="text-[10px] font-mono text-gray-500">
+                          {new Date(comment.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md uppercase ${
+                          comment.type === 'connect' 
+                            ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' 
+                            : comment.type === 'feedback'
+                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                        }`}>
+                          {comment.type}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-gray-300 leading-relaxed bg-[#111827] p-3 rounded-xl border border-white/5 whitespace-pre-wrap">
+                        {comment.message}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
           

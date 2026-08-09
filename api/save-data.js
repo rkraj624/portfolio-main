@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -18,13 +20,25 @@ export default async function handler(req, res) {
   }
 
   const { data, pdfBase64, avatarBase64, pushToGit, password } = req.body || {};
+  const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const REPO = 'rkraj624/portfolio-main';
   const BRANCH = 'main';
 
-  // 1. Password Security Check
-  if (ADMIN_PASSWORD && password !== ADMIN_PASSWORD) {
+  // 1. Bcrypt Password Security Check
+  let isPasswordValid = false;
+  if (ADMIN_PASSWORD_HASH) {
+    isPasswordValid = await bcrypt.compare(password || '', ADMIN_PASSWORD_HASH);
+  } else if (ADMIN_PASSWORD) {
+    if (ADMIN_PASSWORD.startsWith('$2a$') || ADMIN_PASSWORD.startsWith('$2b$')) {
+      isPasswordValid = await bcrypt.compare(password || '', ADMIN_PASSWORD);
+    } else {
+      isPasswordValid = (password === ADMIN_PASSWORD);
+    }
+  }
+
+  if (!isPasswordValid) {
     return res.status(401).json({ success: false, error: 'Unauthorized: Invalid Admin Password' });
   }
 

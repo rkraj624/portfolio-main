@@ -12,6 +12,7 @@ import AdminDashboard from './admin/AdminDashboard';
 import TechBackground from './components/TechBackground';
 import TechLoader from './components/TechLoader';
 import AudioIntroduction from './components/AudioIntroduction';
+import ContactFeedbackSection from './components/ContactFeedbackSection';
 
 import { PORTFOLIO_DATA } from './data';
 import { Analytics } from '@vercel/analytics/react';
@@ -106,6 +107,7 @@ export default function App() {
           <Skills skills={skills} />
           <CustomSections customSections={portfolioData.customSections} />
           <Achievements achievements={achievements} education={education} />
+          <ContactFeedbackSection personal={personal} />
         </main>
 
         {/* Floating Audio Introduction Player */}

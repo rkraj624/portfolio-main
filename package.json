@@ -12,7 +12,9 @@
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
+    "dotenv": "^17.4.2",
     "framer-motion": "^13.0.0",
     "ioredis": "^6.0.0",
     "lucide-react": "^1.29.0",
