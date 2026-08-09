@@ -78,7 +78,7 @@ export default function Server3DRack({ personal }) {
               <Cpu size={15} className="text-emerald-400" />
               <div>
                 <div className="text-[11px] font-bold text-white font-mono">Spring Boot Microservices</div>
-                <div className="text-[9px] text-gray-400 font-mono">REST / gRPC • 99.9% Uptime</div>
+                <div className="text-[9px] text-gray-400 font-mono">REST / AWS • 99.9% Uptime</div>
               </div>
             </div>
             <div className="flex items-center gap-1 text-[10px] font-mono text-sky-400">
@@ -91,7 +91,7 @@ export default function Server3DRack({ personal }) {
             <div className="flex items-center gap-2">
               <Zap size={15} className="text-amber-400" />
               <div>
-                <div className="text-[11px] font-bold text-white font-mono">Kafka & Redis Lock Queue</div>
+                <div className="text-[11px] font-bold text-white font-mono">Kafka & Redis</div>
                 <div className="text-[9px] text-gray-400 font-mono">50K req/sec • Distributed Sync</div>
               </div>
             </div>

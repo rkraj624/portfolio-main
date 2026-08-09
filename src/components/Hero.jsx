@@ -61,9 +61,9 @@ export default function Hero({ personal, summary }) {
           <div className="flex flex-wrap items-center gap-4 pt-4">
             <button 
               onClick={handleCopyEmail}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 font-semibold text-sm transition active:scale-95"
+              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 font-semibold text-sm btn-3d"
             >
-              {copiedEmail ? <Check size={18} className="text-emerald-400" /> : <Copy size={18} />}
+              {copiedEmail ? <Check size={18} className="text-emerald-400 icon-3d" /> : <Copy size={18} className="icon-3d" />}
               <span>{copiedEmail ? "Copied Email!" : personal.email}</span>
             </button>
 
@@ -72,19 +72,19 @@ export default function Hero({ personal, summary }) {
                 href={personal.linkedin} 
                 target="_blank" 
                 rel="noreferrer"
-                className="p-3 rounded-xl bg-white/[0.05] hover:bg-indigo-600/20 hover:text-sky-400 border border-white/10 transition hover:scale-110"
+                className="p-3 rounded-xl bg-white/[0.05] hover:bg-indigo-600/20 hover:text-sky-400 border border-white/10 btn-3d"
                 title="LinkedIn"
               >
-                <LinkedinIcon size={20} />
+                <LinkedinIcon size={20} className="icon-3d" />
               </a>
               <a 
                 href={personal.github} 
                 target="_blank" 
                 rel="noreferrer"
-                className="p-3 rounded-xl bg-white/[0.05] hover:bg-indigo-600/20 hover:text-sky-400 border border-white/10 transition hover:scale-110"
+                className="p-3 rounded-xl bg-white/[0.05] hover:bg-indigo-600/20 hover:text-sky-400 border border-white/10 btn-3d"
                 title="GitHub"
               >
-                <GithubIcon size={20} />
+                <GithubIcon size={20} className="icon-3d" />
               </a>
             </div>
           </div>

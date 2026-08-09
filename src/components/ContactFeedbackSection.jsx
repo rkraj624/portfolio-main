@@ -276,18 +276,18 @@ export default function ContactFeedbackSection({ personal }) {
               />
             </div>
 
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
               <span className="text-[11px] text-gray-400">Direct Email: <a href={`mailto:${personal.email}`} className="text-sky-400 hover:underline">{personal.email}</a></span>
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-xl shadow-indigo-500/25 transition active:scale-95 disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs btn-3d disabled:opacity-50"
               >
                 {submitting ? (
                   <span>Sending...</span>
                 ) : (
                   <>
-                    <Send size={14} /> Send Message
+                    <Send size={14} className="icon-3d" /> Send Message
                   </>
                 )}
               </button>
