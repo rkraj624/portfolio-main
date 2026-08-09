@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, fadeInUp, staggerContainer } from '../config/constants';
+import Server3DRack from './Server3DRack';
 
 export default function Hero({ personal, summary }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -89,35 +90,9 @@ export default function Hero({ personal, summary }) {
           </div>
         </motion.div>
 
-        {/* Profile Card & Avatar */}
+        {/* 3D Interactive Profile & Server Hologram Node */}
         <motion.div variants={fadeInUp} className="lg:col-span-5 flex justify-center">
-          <div className="relative group w-72 sm:w-80">
-            <div className="absolute -inset-1 bg-gradient-to-r from-sky-500 to-indigo-600 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-            <div className="relative rounded-3xl bg-[#111827] border border-white/10 p-6 flex flex-col items-center text-center">
-              <img 
-                src={personal.avatarUrl} 
-                alt={personal.name} 
-                className="w-40 h-40 rounded-2xl object-cover shadow-2xl mb-6 border-2 border-white/10 group-hover:scale-105 transition duration-300"
-              />
-              <h3 className="text-xl font-bold text-white">{personal.name}</h3>
-              <p className="text-xs text-sky-400 font-mono mt-1">Java & Distributed Systems Specialist</p>
-              <div className="w-full border-t border-white/10 my-4" />
-              <div className="w-full text-left space-y-2 text-xs text-gray-400 font-mono">
-                <div className="flex items-center justify-between">
-                  <span>Location:</span>
-                  <span className="text-gray-200">Delhi-NCR / Remote</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>LeetCode / GFG:</span>
-                  <span className="text-emerald-400 font-semibold">750+ Solved</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Primary Stack:</span>
-                  <span className="text-indigo-300">Java / SpringBoot / Kafka</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Server3DRack personal={personal} />
         </motion.div>
 
       </motion.div>

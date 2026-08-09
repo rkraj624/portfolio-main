@@ -22,7 +22,6 @@ export default function TechBackground({ activeTheme = 'classic' }) {
 
     const themeConfig = THEMES[activeTheme] || THEMES.classic;
 
-    // Matrix Code / Floating Binary Bits & Microservice Network Nodes
     const symbols = ['0', '1', '{ }', 'java', 'kafka', 'redis', 'k8s', 'docker', '%', '01', '</>', 'REST API', 'microservices', 'AWS', 'Spring Boot', 'Java', 'maven', 'JWT', 'MySQL', 'Postgres', 'JPA', 'Jenkins', 'DynamoDB', 'CI/CD'];
     
     // Floating tech text particles
