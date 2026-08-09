@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Send, MessageSquare, Sparkles, CheckCircle2, User, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { Send, MessageSquare, Sparkles, CheckCircle2, User, Mail, Star, Quote } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { COMMENTS as INITIAL_COMMENTS } from '../comments';
 
 export default function ContactFeedbackSection({ personal }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,23 @@ export default function ContactFeedbackSection({ personal }) {
   });
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState(null); // { success: boolean, message: string }
+  const [topComments, setTopComments] = useState(() => {
+    return (INITIAL_COMMENTS || []).filter(c => c.isTop);
+  });
+
+  const fetchComments = async () => {
+    try {
+      const res = await fetch('/api/comments');
+      const data = await res.json();
+      if (res.ok && data.comments) {
+        setTopComments(data.comments.filter(c => c.isTop));
+      }
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +59,7 @@ export default function ContactFeedbackSection({ personal }) {
       if (res.ok && data.success) {
         setStatus({ success: true, message: '✨ Thank you! Your message/feedback has been sent successfully.' });
         setFormData({ name: '', email: '', linkedin: '', type: 'connect', message: '' });
+        fetchComments();
       } else {
         setStatus({ success: false, message: data.error || 'Failed to submit. Please try again.' });
       }
@@ -54,7 +73,70 @@ export default function ContactFeedbackSection({ personal }) {
 
   return (
     <section className="py-20 relative z-10 border-t border-white/10">
-      <div className="max-w-4xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6 space-y-12">
+        
+        {/* Top Featured Comments Showcase Card */}
+        {topComments.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-4"
+          >
+            <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
+              <h3 className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                <Star size={16} className="fill-amber-400 text-amber-400 animate-pulse" />
+                Featured Visitor Testimonials & Feedback
+              </h3>
+              <span className="text-[10px] font-mono bg-amber-500/10 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">
+                ⭐ {topComments.length} Top Pick{topComments.length > 1 ? 's' : ''}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {topComments.map((comment) => (
+                <div 
+                  key={comment.id}
+                  className="bg-gradient-to-br from-[#111827] via-[#090d16] to-[#111827] border border-amber-500/30 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-amber-400/50 transition duration-300"
+                >
+                  <Quote size={48} className="absolute -bottom-2 -right-2 text-amber-500/5 pointer-events-none group-hover:text-amber-500/10 transition" />
+                  
+                  <div className="space-y-3 relative z-10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono font-bold text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-lg border border-sky-500/20">
+                        {comment.type === 'connect' ? '🤝 Connection Request' : '💡 Portfolio Feedback'}
+                      </span>
+                      <span className="text-[10px] font-mono text-gray-500">
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-gray-200 leading-relaxed italic">
+                      "{comment.message}"
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/5 flex items-center justify-between relative z-10 mt-4">
+                    <div>
+                      <h4 className="text-xs font-bold text-white">{comment.name}</h4>
+                      <p className="text-[10px] text-gray-400 font-mono">Verified Visitor</p>
+                    </div>
+                    {comment.linkedin && (
+                      <a 
+                        href={comment.linkedin} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[11px] font-mono transition"
+                      >
+                        <span className="font-bold">in</span> Connect
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
         
         {/* Section Header */}
         <div className="text-center space-y-3 mb-12">

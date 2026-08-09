@@ -1,4 +1,4 @@
-export const COMMENTS = [
+[
   {
     "id": "c_sample1",
     "name": "Sarah Chen",
@@ -8,4 +8,4 @@ export const COMMENTS = [
     "createdAt": "2026-08-08T14:20:00.000Z",
     "isTop": false
   }
-];
+]

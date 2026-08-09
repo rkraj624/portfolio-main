@@ -787,16 +787,65 @@ export default function AdminDashboard({ data, onUpdateData, onClose }) {
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md uppercase ${
-                          comment.type === 'connect' 
-                            ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' 
-                            : comment.type === 'feedback'
-                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                              : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
-                        }`}>
-                          {comment.type}
-                        </span>
+                      <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md uppercase ${
+                            comment.type === 'connect' 
+                              ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' 
+                              : comment.type === 'feedback'
+                                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                          }`}>
+                            {comment.type}
+                          </span>
+                          {comment.isTop && (
+                            <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-md border border-amber-500/30 font-bold flex items-center gap-1">
+                              ⭐ Top Featured Comment
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={async () => {
+                              try {
+                                const res = await fetch('/api/comments', {
+                                  method: 'PUT',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ id: comment.id, isTop: !comment.isTop })
+                                });
+                                const d = await res.json();
+                                if (d.comments) setComments(d.comments);
+                              } catch (e) {}
+                            }}
+                            className={`px-3 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${
+                              comment.isTop 
+                                ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40' 
+                                : 'bg-white/5 hover:bg-white/10 text-gray-400 border border-white/10'
+                            }`}
+                          >
+                            <span>{comment.isTop ? '⭐ Featured on Main Page' : '📌 Mark as Top Comment'}</span>
+                          </button>
+
+                          <button
+                            onClick={async () => {
+                              if (window.confirm("Are you sure you want to delete this visitor message?")) {
+                                try {
+                                  const res = await fetch(`/api/comments?id=${comment.id}`, {
+                                    method: 'DELETE'
+                                  });
+                                  const d = await res.json();
+                                  if (d.comments) setComments(d.comments);
+                                } catch (e) {}
+                              }
+                            }}
+                            className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition flex items-center gap-1"
+                            title="Delete Message"
+                          >
+                            <Trash2 size={13} />
+                            <span>Delete</span>
+                          </button>
+                        </div>
                       </div>
 
                       <p className="text-xs text-gray-300 leading-relaxed bg-[#111827] p-3 rounded-xl border border-white/5 whitespace-pre-wrap">

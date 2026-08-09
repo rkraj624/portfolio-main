@@ -1,4 +1,6 @@
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -154,6 +156,45 @@ export default async function handler(req, res) {
         throw new Error(`GitHub PUT avatar error: ${errData.message || putAvatarRes.statusText}`);
       }
       hasAnyChangesPushed = true;
+    }
+
+    // 6. Sync src/comments.js on GitHub to persist top featured pinned comments
+    try {
+      const commentsJsPath = path.resolve(process.cwd(), 'src/comments.js');
+      if (fs.existsSync(commentsJsPath)) {
+        const commentsRaw = fs.readFileSync(commentsJsPath, 'utf-8');
+        const commentsUrl = `https://api.github.com/repos/${REPO}/contents/src/comments.js`;
+        const commentsRes = await fetch(commentsUrl, {
+          headers: { Authorization: `token ${GITHUB_TOKEN}`, 'User-Agent': 'Vercel-Serverless' }
+        });
+        
+        if (commentsRes.ok) {
+          const commentsFile = await commentsRes.json();
+          const commentsBase64 = Buffer.from(commentsRaw).toString('base64');
+          const existingClean = (commentsFile.content || '').replace(/\s/g, '');
+          const newClean = commentsBase64.replace(/\s/g, '');
+
+          if (existingClean !== newClean) {
+            await fetch(commentsUrl, {
+              method: 'PUT',
+              headers: {
+                Authorization: `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+                'User-Agent': 'Vercel-Serverless'
+              },
+              body: JSON.stringify({
+                message: `chore: sync pinned top comments via dashboard [${new Date().toLocaleString()}]`,
+                content: commentsBase64,
+                sha: commentsFile.sha,
+                branch: BRANCH
+              })
+            });
+            hasAnyChangesPushed = true;
+          }
+        }
+      }
+    } catch (e) {
+      console.error('GitHub comments sync warning:', e);
     }
 
     if (!hasAnyChangesPushed) {

@@ -206,6 +206,7 @@ export default function saveApiPlugin() {
                   linkedin: linkedin && linkedin.trim() ? linkedin.trim() : '',
                   type: type || 'feedback',
                   message: message.trim(),
+                  isTop: false,
                   createdAt: new Date().toISOString()
                 };
 
@@ -216,6 +217,26 @@ export default function saveApiPlugin() {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ success: true, comment: newComment, comments }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ success: false, error: err.message }));
+              }
+            });
+            return;
+          }
+
+          if (req.method === 'PUT') {
+            let body = '';
+            req.on('data', chunk => { body += chunk.toString(); });
+            req.on('end', () => {
+              try {
+                const { id, isTop } = JSON.parse(body || '{}');
+                comments = comments.map(c => c.id === id ? { ...c, isTop: !!isTop } : c);
+                fs.writeFileSync(commentsFile, JSON.stringify(comments, null, 2), 'utf-8');
+                fs.writeFileSync(srcCommentsFile, `export const COMMENTS = ${JSON.stringify(comments, null, 2)};\n`, 'utf-8');
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true, comments }));
               } catch (err) {
                 res.statusCode = 500;
                 res.end(JSON.stringify({ success: false, error: err.message }));

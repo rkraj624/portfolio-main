@@ -16,8 +16,10 @@ function getLocalComments() {
       id: 'c_sample1',
       name: 'Sarah Chen',
       email: 'sarah@techlead.io',
+      linkedin: 'https://linkedin.com/in/sarahchen-tech',
       type: 'connect',
-      message: 'Impressive backend work on high-throughput microservices and Kafka distributed locks! Would love to connect.',
+      message: 'Impressive backend work on high-throughput microservices and Kafka distributed locks! Looking forward to connecting.',
+      isTop: true,
       createdAt: '2026-08-08T14:20:00.000Z'
     }
   ];
@@ -40,7 +42,7 @@ function saveLocalComments(comments) {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
@@ -72,6 +74,7 @@ export default async function handler(req, res) {
       linkedin: linkedin && linkedin.trim() ? linkedin.trim() : '',
       type: type || 'feedback', // 'connect' | 'feedback' | 'general'
       message: message.trim(),
+      isTop: false,
       createdAt: new Date().toISOString()
     };
 
@@ -79,6 +82,14 @@ export default async function handler(req, res) {
     saveLocalComments(comments);
 
     return res.status(200).json({ success: true, comment: newComment, comments });
+  }
+
+  // PUT: Toggle Top Comment Status (from Admin dashboard)
+  if (req.method === 'PUT') {
+    const { id, isTop } = req.body || {};
+    const updated = comments.map(c => c.id === id ? { ...c, isTop: !!isTop } : c);
+    saveLocalComments(updated);
+    return res.status(200).json({ success: true, comments: updated });
   }
 
   // DELETE: Remove comment (from Admin dashboard)
