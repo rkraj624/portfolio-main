@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { FileDown, Menu, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import ThemeSwitcher from './ThemeSwitcher';
 
-export default function Header({ personal, scrolled }) {
+export default function Header({ personal, scrolled, activeTheme, onSelectTheme }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const triggerConfetti = () => {
@@ -30,7 +31,7 @@ export default function Header({ personal, scrolled }) {
           <a href="#achievements" className="hover:text-sky-400 transition">Achievements</a>
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
           <a 
             href={personal.resumeUrl} 
             download 

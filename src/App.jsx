@@ -13,6 +13,7 @@ import TechBackground from './components/TechBackground';
 import TechLoader from './components/TechLoader';
 import AudioIntroduction from './components/AudioIntroduction';
 import ContactFeedbackSection from './components/ContactFeedbackSection';
+import ThemeSwitcher, { THEMES } from './components/ThemeSwitcher';
 
 import { PORTFOLIO_DATA } from './data';
 import { Analytics } from '@vercel/analytics/react';
@@ -23,11 +24,37 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [activeTheme, setActiveTheme] = useState(() => {
+    try {
+      return localStorage.getItem('portfolio_theme') || 'classic';
+    } catch (e) { return 'classic'; }
+  });
   
   // Single source of truth from src/data.js
   const [portfolioData, setPortfolioData] = useState(PORTFOLIO_DATA);
 
   const { personal, summary, skills, experience, keyProjects, personalProjects, achievements, education } = portfolioData;
+
+  const currentThemeConfig = THEMES[activeTheme] || THEMES.classic;
+
+  useEffect(() => {
+    // Inject dynamic CSS variables into document root
+    document.documentElement.style.setProperty('--theme-gradient', currentThemeConfig.gradientText);
+    document.documentElement.style.setProperty('--bg-primary', currentThemeConfig.primaryBg);
+    document.documentElement.style.setProperty('--bg-glass', currentThemeConfig.cardBg);
+    document.documentElement.style.setProperty('--border-color', currentThemeConfig.cardBorder);
+    document.documentElement.style.setProperty('--border-bright', currentThemeConfig.cardHoverBorder);
+    document.documentElement.style.setProperty('--badge-text', currentThemeConfig.badgeText);
+    document.documentElement.style.setProperty('--badge-bg', currentThemeConfig.badgeBg);
+    document.documentElement.style.setProperty('--badge-border', currentThemeConfig.badgeBorder);
+  }, [activeTheme]);
+
+  const handleSelectTheme = (themeId) => {
+    setActiveTheme(themeId);
+    try {
+      localStorage.setItem('portfolio_theme', themeId);
+    } catch (e) {}
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,12 +105,24 @@ export default function App() {
 
   // Default Route: /
   return (
-    <div className="min-h-screen bg-[#090d16] text-[#f3f4f6] font-sans relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+    <div 
+      className="min-h-screen text-[#f3f4f6] font-sans relative selection:bg-indigo-500 selection:text-white overflow-x-hidden transition-colors duration-700"
+      style={{ backgroundColor: currentThemeConfig.primaryBg }}
+    >
       
       {/* Permanent Static Ambient Glows & Interactive Tech Canvas Background */}
-      <TechBackground />
-      <div className="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="fixed top-1/3 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <TechBackground activeTheme={activeTheme} />
+      <div 
+        className="fixed top-0 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none -z-10 transition-colors duration-700"
+        style={{ backgroundColor: currentThemeConfig.glow1 }}
+      />
+      <div 
+        className="fixed top-1/3 right-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none -z-10 transition-colors duration-700"
+        style={{ backgroundColor: currentThemeConfig.glow2 }}
+      />
+
+      {/* Floating macOS-Style Glass Theme Dock */}
+      <ThemeSwitcher currentTheme={activeTheme} onSelectTheme={handleSelectTheme} />
 
       {/* Intro System Boot Tech Loader with AnimatePresence */}
       <AnimatePresence mode="wait">
@@ -98,7 +137,12 @@ export default function App() {
         className={isLoading ? "pointer-events-none" : ""}
       >
         {/* Main Layout Sections */}
-        <Header personal={personal} scrolled={scrolled} />
+        <Header 
+          personal={personal} 
+          scrolled={scrolled} 
+          activeTheme={activeTheme} 
+          onSelectTheme={handleSelectTheme} 
+        />
         
         <main className="relative z-10">
           <Hero personal={personal} summary={summary} />

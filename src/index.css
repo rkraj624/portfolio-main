@@ -5,16 +5,16 @@
   --bg-glass: rgba(17, 24, 39, 0.75);
   --border-color: rgba(255, 255, 255, 0.12);
   --border-bright: rgba(99, 102, 241, 0.5);
+  --badge-text: #38bdf8;
+  --badge-bg: rgba(56, 189, 248, 0.15);
+  --badge-border: rgba(56, 189, 248, 0.3);
   
   --text-primary: #ffffff;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
   
-  --accent-cyan: #38bdf8;
-  --accent-indigo: #818cf8;
-  --accent-purple: #c084fc;
-  --accent-emerald: #34d399;
-  --accent-amber: #fbbf24;
+  --accent-primary: #38bdf8;
+  --theme-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #a855f7 100%);
   
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-code: 'JetBrains Mono', monospace;
@@ -74,10 +74,15 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-bright);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #a855f7 100%);
+  background: var(--theme-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

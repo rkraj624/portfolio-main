@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+import { THEMES } from './ThemeSwitcher';
 
-export default function TechBackground() {
+export default function TechBackground({ activeTheme = 'classic' }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -19,6 +20,8 @@ export default function TechBackground() {
     };
     window.addEventListener('resize', handleResize);
 
+    const themeConfig = THEMES[activeTheme] || THEMES.classic;
+
     // Matrix Code / Floating Binary Bits & Microservice Network Nodes
     const symbols = ['0', '1', '{ }', 'java', 'kafka', 'redis', 'k8s', 'docker', '%', '01', '</>', 'REST API', 'microservices', 'AWS', 'Spring Boot', 'Java', 'maven', 'JWT', 'MySQL', 'Postgres', 'JPA', 'Jenkins', 'DynamoDB', 'CI/CD'];
     
@@ -30,7 +33,7 @@ export default function TechBackground() {
       fontSize: Math.floor(Math.random() * 5) + 12,
       speedY: -(Math.random() * 0.4 + 0.18),
       speedX: (Math.random() - 0.5) * 0.25,
-      opacity: Math.random() * 0.40 + 0.60, // Gently balanced opacity (25% - 55%)
+      opacity: Math.random() * 0.40 + 0.60,
     }));
 
     // Distributed Nodes for Network Lines
@@ -45,7 +48,7 @@ export default function TechBackground() {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Draw Mesh Network Connections (Distributed Systems Nodes)
+      // 1. Draw Mesh Network Connections
       for (let i = 0; i < nodes.length; i++) {
         const nodeA = nodes[i];
         nodeA.x += nodeA.vx;
@@ -55,7 +58,7 @@ export default function TechBackground() {
         if (nodeA.y < 0 || nodeA.y > height) nodeA.vy *= -1;
 
         // Draw node pulse point
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.9)'; // Sky Blue dot
+        ctx.fillStyle = themeConfig.nodeColor;
         ctx.beginPath();
         ctx.arc(nodeA.x, nodeA.y, nodeA.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -68,7 +71,7 @@ export default function TechBackground() {
 
           // Connect nodes within 170px proximity
           if (dist < 170) {
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.45 * (1 - dist / 170)})`; // Soft vivid Indigo Line (max 45%)
+            ctx.strokeStyle = themeConfig.lineColor(dist);
             ctx.lineWidth = 1.2;
             ctx.beginPath();
             ctx.moveTo(nodeA.x, nodeA.y);
@@ -78,12 +81,11 @@ export default function TechBackground() {
         }
       }
 
-      // 2. Draw Floating Tech Code Particles (Matrix/SSE feel)
+      // 2. Draw Floating Tech Code Particles
       particles.forEach((p) => {
         p.y += p.speedY;
         p.x += p.speedX;
 
-        // Reset particle when floating past top
         if (p.y < -30) {
           p.y = height + 20;
           p.x = Math.random() * width;
@@ -91,7 +93,7 @@ export default function TechBackground() {
         }
 
         ctx.font = `${p.fontSize}px "JetBrains Mono", monospace`;
-        ctx.fillStyle = `rgba(56, 189, 248, ${p.opacity})`;
+        ctx.fillStyle = `${themeConfig.textColor}${p.opacity})`;
         ctx.fillText(p.symbol, p.x, p.y);
       });
 
@@ -104,7 +106,7 @@ export default function TechBackground() {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [activeTheme]);
 
   return (
     <canvas 
