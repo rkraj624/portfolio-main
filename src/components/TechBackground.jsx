@@ -22,7 +22,7 @@ export default function TechBackground({ activeTheme = 'classic' }) {
 
     const themeConfig = THEMES[activeTheme] || THEMES.classic;
 
-    const symbols = ['0', '1', '{ }', 'java', 'kafka', 'redis', 'k8s', 'docker', '%', '01', '</>', 'REST API', 'microservices', 'AWS', 'Spring Boot', 'Java', 'maven', 'JWT', 'MySQL', 'Postgres', 'JPA', 'Jenkins', 'DynamoDB', 'CI/CD'];
+    const symbols = ['0', '1', '{ }', 'java', 'kafka', 'redis', 'k8s', 'docker', '%', '01', '</>', 'REST API', 'microservices', 'AWS', 'Spring Boot', 'Java', 'maven', 'JWT', 'MySQL', 'Postgres', 'JPA', 'Jenkins', 'DynamoDB', 'CI/CD','spark','elasticsearch','react','github','claude code','antigravity','AI','Mongo DB','HLD','LLD'];
     
     // Floating tech text particles
     const particles = Array.from({ length: 50 }, () => ({
@@ -32,7 +32,7 @@ export default function TechBackground({ activeTheme = 'classic' }) {
       fontSize: Math.floor(Math.random() * 5) + 12,
       speedY: -(Math.random() * 0.4 + 0.18),
       speedX: (Math.random() - 0.5) * 0.25,
-      opacity: Math.random() * 0.40 + 0.60,
+      opacity: Math.random() * 0.20 + 0.25,
     }));
 
     // Distributed Nodes for Network Lines

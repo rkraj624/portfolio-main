@@ -13,7 +13,7 @@ import TechBackground from './components/TechBackground';
 import TechLoader from './components/TechLoader';
 import AudioIntroduction from './components/AudioIntroduction';
 import ContactFeedbackSection from './components/ContactFeedbackSection';
-import ThemeSwitcher, { THEMES } from './components/ThemeSwitcher';
+import ThemeSwitcher, { THEMES, generateCustomTheme } from './components/ThemeSwitcher';
 
 import { PORTFOLIO_DATA } from './data';
 import { Analytics } from '@vercel/analytics/react';
@@ -29,13 +29,20 @@ export default function App() {
       return localStorage.getItem('portfolio_theme') || 'classic';
     } catch (e) { return 'classic'; }
   });
+  const [customColor, setCustomColor] = useState(() => {
+    try {
+      return localStorage.getItem('portfolio_custom_color') || '#06b6d4';
+    } catch (e) { return '#06b6d4'; }
+  });
   
   // Single source of truth from src/data.js
   const [portfolioData, setPortfolioData] = useState(PORTFOLIO_DATA);
 
   const { personal, summary, skills, experience, keyProjects, personalProjects, achievements, education } = portfolioData;
 
-  const currentThemeConfig = THEMES[activeTheme] || THEMES.classic;
+  const currentThemeConfig = activeTheme === 'custom'
+    ? generateCustomTheme(customColor)
+    : (THEMES[activeTheme] || THEMES.classic);
 
   useEffect(() => {
     // Inject dynamic CSS variables into document root
@@ -47,9 +54,15 @@ export default function App() {
     document.documentElement.style.setProperty('--badge-text', currentThemeConfig.badgeText);
     document.documentElement.style.setProperty('--badge-bg', currentThemeConfig.badgeBg);
     document.documentElement.style.setProperty('--badge-border', currentThemeConfig.badgeBorder);
-  }, [activeTheme]);
+  }, [activeTheme, customColor]);
 
-  const handleSelectTheme = (themeId) => {
+  const handleSelectTheme = (themeId, newHexColor) => {
+    if (newHexColor) {
+      setCustomColor(newHexColor);
+      try {
+        localStorage.setItem('portfolio_custom_color', newHexColor);
+      } catch (e) {}
+    }
     setActiveTheme(themeId);
     try {
       localStorage.setItem('portfolio_theme', themeId);
@@ -122,7 +135,7 @@ export default function App() {
       />
 
       {/* Floating macOS-Style Glass Theme Dock */}
-      <ThemeSwitcher currentTheme={activeTheme} onSelectTheme={handleSelectTheme} />
+      <ThemeSwitcher currentTheme={activeTheme} customColor={customColor} onSelectTheme={handleSelectTheme} />
 
       {/* Intro System Boot Tech Loader with AnimatePresence */}
       <AnimatePresence mode="wait">

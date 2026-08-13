@@ -81,25 +81,25 @@ export default function Projects({ keyProjects, personalProjects }) {
         {keyProjects.map((project, idx) => (
           <motion.div variants={fadeInUp} key={idx}>
             <Tilt3DCard className="h-full">
-              <div className="p-6 rounded-2xl bg-[#111827]/70 border border-white/10 flex flex-col justify-between hover:border-sky-500/40 transition-all duration-300 shadow-xl h-full">
+              <div className="p-6 sm:p-7 rounded-2xl bg-[#111827]/85 border border-white/15 flex flex-col justify-between hover:border-sky-500/50 transition-all duration-300 shadow-xl h-full">
                 <div>
-                  <div className="text-xs font-mono text-sky-400 mb-1">{project.client}</div>
-                  <h3 className="text-lg font-bold text-white mb-3">{project.title}</h3>
-                  <p className="text-xs text-gray-400 mb-6 leading-relaxed">{project.description}</p>
+                  <div className="text-sm font-mono text-sky-400 font-bold mb-1.5">{project.client}</div>
+                  <h3 className="text-xl font-bold text-white mb-3">{project.title}</h3>
+                  <p className="text-sm text-gray-200 mb-6 leading-relaxed">{project.description}</p>
                   
                   <div className="space-y-3 mb-6">
                     {project.metrics.map((metric, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-gray-300">
-                        <Zap size={14} className="text-amber-400 mt-0.5 shrink-0" />
-                        <span>{metric}</span>
+                      <div key={i} className="flex items-start gap-2.5 text-sm text-gray-100 font-medium">
+                        <Zap size={16} className="text-amber-400 mt-0.5 shrink-0" />
+                        <span className="leading-snug">{metric}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/5">
+                <div className="flex flex-wrap gap-2 pt-4 border-t border-white/10">
                   {project.tags.map((tag, i) => (
-                    <span key={i} className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/5 text-gray-400">
+                    <span key={i} className="px-2.5 py-1 rounded text-xs font-mono font-semibold bg-white/10 text-gray-200 border border-white/10">
                       {tag}
                     </span>
                   ))}
@@ -117,24 +117,24 @@ export default function Projects({ keyProjects, personalProjects }) {
           {/* Header & Controls Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                <Layers size={20} />
+              <div className="p-2.5 rounded-xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">
+                <Layers size={22} />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
                   Personal & Open Source Projects
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                  <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-indigo-500/25 text-indigo-300 border border-indigo-500/40">
                     {currentIndex + 1} of {filteredPersonalProjects.length}
                   </span>
                 </h3>
-                <p className="text-xs text-gray-400">Interactive repository slider & engineering showcases</p>
+                <p className="text-sm text-gray-300">Interactive repository slider & engineering showcases</p>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
               {/* Category Filter Tabs */}
               {categories.length > 1 && (
-                <div className="flex items-center gap-1.5 bg-[#111827] p-1.5 rounded-xl border border-white/10">
+                <div className="flex items-center gap-1.5 bg-[#111827] p-1.5 rounded-xl border border-white/15 shadow-md">
                   {categories.map((cat, idx) => (
                     <button
                       key={idx}
@@ -142,10 +142,10 @@ export default function Projects({ keyProjects, personalProjects }) {
                         setSelectedCategory(cat);
                         setCurrentIndex(0);
                       }}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                      className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition ${
                         selectedCategory === cat
                           ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                          : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          : 'text-gray-300 hover:text-white hover:bg-white/10'
                       }`}
                     >
                       {cat}
@@ -158,17 +158,17 @@ export default function Projects({ keyProjects, personalProjects }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrev}
-                  className="p-2.5 rounded-xl bg-[#111827] border border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/10 text-gray-300 hover:text-white transition active:scale-95 shadow-lg"
+                  className="p-2.5 rounded-xl bg-[#111827] border border-white/15 hover:border-indigo-500/50 hover:bg-indigo-500/10 text-gray-200 hover:text-white transition active:scale-95 shadow-lg"
                   title="Previous Project"
                 >
-                  <ChevronLeft size={18} />
+                  <ChevronLeft size={20} />
                 </button>
                 <button
                   onClick={handleNext}
-                  className="p-2.5 rounded-xl bg-[#111827] border border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/10 text-gray-300 hover:text-white transition active:scale-95 shadow-lg"
+                  className="p-2.5 rounded-xl bg-[#111827] border border-white/15 hover:border-indigo-500/50 hover:bg-indigo-500/10 text-gray-200 hover:text-white transition active:scale-95 shadow-lg"
                   title="Next Project"
                 >
-                  <ChevronRight size={18} />
+                  <ChevronRight size={20} />
                 </button>
               </div>
             </div>
@@ -186,21 +186,21 @@ export default function Projects({ keyProjects, personalProjects }) {
                   transition={{ duration: 0.35, ease: "easeInOut" }}
                 >
                   <Tilt3DCard>
-                    <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/40 to-sky-950/40 border border-indigo-500/30 shadow-2xl relative">
+                    <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/70 via-[#111827]/90 to-sky-950/70 border border-indigo-500/40 shadow-2xl relative">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <div>
-                          <span className="text-xs font-mono text-sky-300 font-semibold">
+                          <span className="text-sm font-mono text-sky-400 font-bold mb-1">
                             Personal Project #{currentIndex + 1}
                           </span>
-                          <h4 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3 mt-1">
+                          <h3 className="text-xl font-bold text-white mt-1 mb-2">
                             {currentProject.name}
-                          </h4>
-                          <p className="text-sm text-gray-200 mt-1 mb-3">{currentProject.tagline}</p>
+                          </h3>
+                          <p className="text-sm text-gray-200 mb-4 leading-relaxed">{currentProject.tagline}</p>
                           
                           {/* Tech Stack Pills */}
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-2">
                             {currentProject.tech && currentProject.tech.map((t, i) => (
-                              <span key={i} className="px-2.5 py-0.5 rounded text-[11px] font-mono bg-indigo-500/20 text-indigo-200 border border-indigo-500/30 font-medium">
+                              <span key={i} className="px-2.5 py-1 rounded text-xs font-mono font-semibold bg-indigo-500/25 text-indigo-200 border border-indigo-500/40">
                                 {t}
                               </span>
                             ))}
@@ -233,7 +233,7 @@ export default function Projects({ keyProjects, personalProjects }) {
                               href={currentProject.github} 
                               target="_blank" 
                               rel="noreferrer" 
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/15 hover:bg-white/25 text-white border border-white/25 transition shadow-md"
                               title="View GitHub Repository"
                             >
                               <span>GitHub</span>
@@ -245,20 +245,20 @@ export default function Projects({ keyProjects, personalProjects }) {
                       {/* Features Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         {currentProject.features && currentProject.features.map((feat, i) => (
-                          <div key={i} className="p-4 rounded-xl bg-[#111827]/80 border border-white/10 text-xs text-gray-100 flex items-start gap-2.5 shadow-md">
+                          <div key={i} className="p-4 rounded-xl bg-[#111827]/85 border border-white/15 text-sm text-gray-100 flex items-start gap-2.5 shadow-md">
                             <ShieldCheck size={16} className="text-emerald-400 shrink-0 mt-0.5" />
-                            <span className="leading-relaxed font-normal">{feat}</span>
+                            <span className="leading-snug text-sm text-gray-100 font-medium">{feat}</span>
                           </div>
                         ))}
                       </div>
 
                       {/* Key Takeaways Callout */}
                       {currentProject.learning && (
-                        <div className="p-4 rounded-xl bg-sky-950/50 border border-sky-400/30 text-xs text-sky-100 flex items-start gap-2.5 shadow-lg">
-                          <Zap size={16} className="text-sky-300 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold text-sky-200">Key Engineering Takeaways: </span>
-                            <span className="text-gray-100 leading-relaxed">{currentProject.learning}</span>
+                        <div className="p-4 rounded-xl bg-sky-950/70 border border-sky-400/40 text-sm text-sky-100 flex items-start gap-2.5 shadow-lg">
+                          <Zap size={16} className="text-amber-400 shrink-0 mt-0.5" />
+                          <div className="leading-relaxed text-sm">
+                            <span className="font-bold text-sky-200 text-sm">Key Engineering Takeaways: </span>
+                            <span className="text-gray-100 font-medium text-sm">{currentProject.learning}</span>
                           </div>
                         </div>
                       )}

@@ -17,12 +17,12 @@ export default function CustomSections({ customSections }) {
             variants={fadeInUp}
             className="flex items-center gap-3 mb-12"
           >
-            <div className="p-2.5 rounded-xl bg-indigo-500/10 text-sky-400 border border-indigo-500/20 text-xl">
+            <div className="p-2.5 rounded-xl bg-indigo-500/15 text-sky-400 border border-indigo-500/30 text-xl">
               {sec.icon || "✨"}
             </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold">{sec.title}</h2>
-              {sec.subtitle && <p className="text-sm text-gray-400">{sec.subtitle}</p>}
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">{sec.title}</h2>
+              {sec.subtitle && <p className="text-sm text-gray-300">{sec.subtitle}</p>}
             </div>
           </motion.div>
 
@@ -35,18 +35,18 @@ export default function CustomSections({ customSections }) {
                 variants={fadeInUp}
                 whileHover={{ translateY: -4 }}
                 key={i} 
-                className="p-6 rounded-2xl bg-[#111827]/60 border border-white/10 hover:border-sky-500/40 transition duration-300 shadow-xl flex flex-col justify-between"
+                className="p-6 rounded-2xl bg-[#111827]/85 border border-white/15 hover:border-sky-500/50 transition duration-300 shadow-xl flex flex-col justify-between"
               >
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-                  {item.subtitle && <div className="text-xs font-mono text-sky-400 mb-3">{item.subtitle}</div>}
-                  <p className="text-xs text-gray-300 leading-relaxed mb-4">{item.description}</p>
+                  <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                  {item.subtitle && <div className="text-sm font-mono font-bold text-sky-400 mb-3">{item.subtitle}</div>}
+                  <p className="text-sm text-gray-100 font-medium leading-relaxed mb-4">{item.description}</p>
                 </div>
 
                 {item.tags && item.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+                  <div className="flex flex-wrap gap-2 pt-3 border-t border-white/10">
                     {item.tags.map((tag, tIdx) => (
-                      <span key={tIdx} className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/5 text-gray-400">
+                      <span key={tIdx} className="px-2.5 py-1 rounded text-xs font-mono font-semibold bg-white/10 text-gray-200 border border-white/10">
                         {tag}
                       </span>
                     ))}

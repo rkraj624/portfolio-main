@@ -23,12 +23,12 @@ export default function Skills({ skills }) {
         variants={fadeInUp}
         className="flex items-center gap-3 mb-12"
       >
-        <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+        <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-400 border border-purple-500/30">
           <Code2 size={24} />
         </div>
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold">Skills & Technologies</h2>
-          <p className="text-sm text-gray-400">Comprehensive backend & distributed systems stack with visual icons</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Skills & Technologies</h2>
+          <p className="text-sm text-gray-300">Comprehensive backend & distributed systems stack with visual icons</p>
         </div>
       </motion.div>
 
@@ -42,18 +42,18 @@ export default function Skills({ skills }) {
         {skills.map((group, idx) => (
           <motion.div variants={fadeInUp} key={idx} className="h-full">
             <Tilt3DCard className="h-full">
-              <div className="p-6 rounded-2xl bg-[#111827]/60 border border-white/10 hover:border-purple-500/40 transition-all duration-300 shadow-xl h-full flex flex-col justify-between">
+              <div className="p-6 rounded-2xl bg-[#111827]/85 border border-white/15 hover:border-purple-500/50 transition-all duration-300 shadow-xl h-full flex flex-col justify-between">
                 <div>
-                  <h3 className="text-base font-semibold text-white mb-4 pb-2 border-b border-white/5 flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-white mb-4 pb-2.5 border-b border-white/10 flex items-center justify-between">
                     <span>{group.category}</span>
-                    {CATEGORY_ICONS[group.category] || <Layers size={16} className="text-purple-400" />}
+                    {CATEGORY_ICONS[group.category] || <Layers size={18} className="text-purple-400" />}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {group.items.map((item, i) => (
                       <motion.span 
                         whileHover={{ scale: 1.08 }}
                         key={i} 
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.05] hover:bg-indigo-600/20 hover:text-white text-gray-200 border border-white/10 flex items-center gap-1.5 transition cursor-default"
+                        className="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-white/10 hover:bg-indigo-600/30 text-white border border-white/15 flex items-center gap-2 transition cursor-default shadow-sm"
                       >
                         <span>{SKILL_ICONS[item] || "🔹"}</span>
                         <span>{item}</span>

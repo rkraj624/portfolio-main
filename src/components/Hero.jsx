@@ -35,7 +35,7 @@ export default function Hero({ personal, summary }) {
             {personal.title}
           </h2>
 
-          <p className="text-gray-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+          <p className="text-gray-200 text-base sm:text-lg max-w-2xl leading-relaxed">
             {summary}
           </p>
 
@@ -45,12 +45,12 @@ export default function Hero({ personal, summary }) {
               <motion.div 
                 whileHover={{ scale: 1.05, translateY: -4 }}
                 key={idx} 
-                className="p-3.5 sm:p-4 rounded-xl bg-white/[0.03] border border-white/5 backdrop-blur-sm shadow-md flex flex-col justify-between"
+                className="p-3.5 sm:p-4 rounded-xl bg-[#111827]/85 border border-white/15 shadow-lg flex flex-col justify-between"
               >
                 <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-sky-400 font-mono tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">
                   {stat.value}
                 </div>
-                <div className="text-[11px] sm:text-xs text-gray-400 font-medium mt-1 leading-snug">
+                <div className="text-xs sm:text-sm text-gray-200 font-semibold mt-1 leading-snug">
                   {stat.label}
                 </div>
               </motion.div>

@@ -157,15 +157,15 @@ export default function ContactFeedbackSection({ personal }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
+          className="bg-[#111827]/85 backdrop-blur-xl border border-white/15 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
           {status && (
-            <div className={`mb-6 p-4 rounded-2xl border text-xs flex items-center gap-3 ${
+            <div className={`mb-6 p-4 rounded-2xl border text-xs sm:text-sm font-medium flex items-center gap-3 ${
               status.success 
-                ? 'bg-emerald-950/60 border-emerald-500/30 text-emerald-300' 
-                : 'bg-rose-950/60 border-rose-500/30 text-rose-300'
+                ? 'bg-emerald-950/70 border-emerald-500/40 text-emerald-300' 
+                : 'bg-rose-950/70 border-rose-500/40 text-rose-300'
             }`}>
               {status.success ? <CheckCircle2 size={18} className="shrink-0" /> : <MessageSquare size={18} className="shrink-0" />}
               <span>{status.message}</span>
@@ -175,7 +175,7 @@ export default function ContactFeedbackSection({ personal }) {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-medium text-gray-300 mb-1.5 flex items-center gap-1.5">
+                <label className="block text-xs font-semibold text-gray-200 mb-1.5 flex items-center gap-1.5">
                   <User size={14} className="text-sky-400" /> Your Name
                 </label>
                 <input 
@@ -183,12 +183,12 @@ export default function ContactFeedbackSection({ personal }) {
                   placeholder="e.g. Alex Morgan"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full bg-[#090d16] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:border-sky-500 outline-none transition"
+                  className="w-full bg-[#090d16] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-sky-500 outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-300 mb-1.5 flex items-center gap-1.5">
+                <label className="block text-xs font-semibold text-gray-200 mb-1.5 flex items-center gap-1.5">
                   <Mail size={14} className="text-sky-400" /> Email Address
                 </label>
                 <input 
@@ -196,16 +196,16 @@ export default function ContactFeedbackSection({ personal }) {
                   placeholder="e.g. alex@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full bg-[#090d16] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:border-sky-500 outline-none transition"
+                  className="w-full bg-[#090d16] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-sky-500 outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-300 mb-1.5 flex items-center gap-1.5">
-                  <span className="text-sky-400 font-bold text-xs">in</span> LinkedIn Username <span className="text-[10px] text-gray-500">(Optional)</span>
+                <label className="block text-xs font-semibold text-gray-200 mb-1.5 flex items-center gap-1.5">
+                  <span className="text-sky-400 font-bold text-xs">in</span> LinkedIn Username <span className="text-[10px] text-gray-400">(Optional)</span>
                 </label>
-                <div className="flex items-center w-full bg-[#090d16] border border-white/10 rounded-xl overflow-hidden focus-within:border-sky-500 transition">
-                  <span className="bg-white/5 px-3 py-3 text-[11px] font-mono text-gray-400 border-r border-white/10 shrink-0 select-none">
+                <div className="flex items-center w-full bg-[#090d16] border border-white/15 rounded-xl overflow-hidden focus-within:border-sky-500 transition">
+                  <span className="bg-white/5 px-3 py-3 text-[11px] font-mono text-gray-300 border-r border-white/10 shrink-0 select-none">
                     linkedin.com/in/
                   </span>
                   <input 
@@ -219,22 +219,22 @@ export default function ContactFeedbackSection({ personal }) {
                       val = val.replace(/^\/|\/$/g, '');
                       setFormData(prev => ({ ...prev, linkedin: val }));
                     }}
-                    className="w-full bg-transparent px-3 py-3 text-xs text-white placeholder-gray-600 outline-none font-mono"
+                    className="w-full bg-transparent px-3 py-3 text-sm text-white placeholder-gray-500 outline-none font-mono"
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-300 mb-2">Subject / Purpose</label>
+              <label className="block text-xs font-semibold text-gray-200 mb-2">Subject / Purpose</label>
               <div className="grid grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, type: 'connect' }))}
-                  className={`py-2.5 px-3 rounded-xl border text-xs font-medium transition ${
+                  className={`py-2.5 px-3 rounded-xl border text-xs sm:text-sm font-bold transition ${
                     formData.type === 'connect' 
                       ? 'bg-sky-600 text-white border-sky-500 shadow-lg shadow-sky-600/25' 
-                      : 'bg-[#090d16] border-white/10 text-gray-400 hover:text-white'
+                      : 'bg-[#090d16] border-white/15 text-gray-300 hover:text-white'
                   }`}
                 >
                   🤝 Connect / Hire
@@ -242,10 +242,10 @@ export default function ContactFeedbackSection({ personal }) {
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, type: 'feedback' }))}
-                  className={`py-2.5 px-3 rounded-xl border text-xs font-medium transition ${
+                  className={`py-2.5 px-3 rounded-xl border text-xs sm:text-sm font-bold transition ${
                     formData.type === 'feedback' 
                       ? 'bg-sky-600 text-white border-sky-500 shadow-lg shadow-sky-600/25' 
-                      : 'bg-[#090d16] border-white/10 text-gray-400 hover:text-white'
+                      : 'bg-[#090d16] border-white/15 text-gray-300 hover:text-white'
                   }`}
                 >
                   💡 Portfolio Feedback
@@ -253,10 +253,10 @@ export default function ContactFeedbackSection({ personal }) {
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, type: 'general' }))}
-                  className={`py-2.5 px-3 rounded-xl border text-xs font-medium transition ${
+                  className={`py-2.5 px-3 rounded-xl border text-xs sm:text-sm font-bold transition ${
                     formData.type === 'general' 
                       ? 'bg-sky-600 text-white border-sky-500 shadow-lg shadow-sky-600/25' 
-                      : 'bg-[#090d16] border-white/10 text-gray-400 hover:text-white'
+                      : 'bg-[#090d16] border-white/15 text-gray-300 hover:text-white'
                   }`}
                 >
                   💬 General Inquiry
@@ -265,23 +265,23 @@ export default function ContactFeedbackSection({ personal }) {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-300 mb-1.5">Your Message</label>
+              <label className="block text-xs font-semibold text-gray-200 mb-1.5">Your Message</label>
               <textarea 
                 rows={4}
                 required
                 placeholder="Share your thoughts, project ideas, feedback, or role details..."
                 value={formData.message}
                 onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                className="w-full bg-[#090d16] border border-white/10 rounded-xl p-4 text-xs text-white placeholder-gray-500 focus:border-sky-500 outline-none leading-relaxed transition"
+                className="w-full bg-[#090d16] border border-white/15 rounded-xl p-4 text-sm text-white placeholder-gray-400 focus:border-sky-500 outline-none leading-relaxed transition"
               />
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-              <span className="text-[11px] text-gray-400">Direct Email: <a href={`mailto:${personal.email}`} className="text-sky-400 hover:underline">{personal.email}</a></span>
+              <span className="text-xs text-gray-300 font-medium">Direct Email: <a href={`mailto:${personal.email}`} className="text-sky-400 hover:underline font-bold">{personal.email}</a></span>
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs btn-3d disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-sm btn-3d disabled:opacity-50"
               >
                 {submitting ? (
                   <span>Sending...</span>
